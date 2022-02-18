@@ -110,6 +110,29 @@ void printMatrix(int mat[NUMOFVERTICES][NUMOFVERTICES]){
 	}
 }
 
+//defining tuple for storing flippable edges
+typedef struct {
+    int ver1;
+    int ver2;
+} flippableEdge;
+
+//helper functions to manipulate tuples of flippable edges
+static flippableEdge allFlips[100];
+static int flippableEcount = 0;
+
+//add flippable edge to the array of flippable edges
+void addTuple(int vertex1, int vertex2) {
+    allFlips[flippableEcount].ver1 = vertex1;
+    allFlips[flippableEcount++].ver2 = vertex2;
+}
+
+//list all flippable edges
+void listTuples(void) {
+    for (int i = 0; i < flippableEcount; ++i)
+        printf("flippable edge: (%d,%d)\n", allFlips[i].ver1, allFlips[i].ver2);
+    puts("==========");
+}
+
 int main(){
 
 	//Constructing triangulated graph, 9-critical, reference 12.57.1 from Boutin paper
@@ -193,15 +216,26 @@ int main(){
 	int result[NUMOFVERTICES][NUMOFVERTICES];
 	initiateMatrix(result);
 
+	printf("\n");
 
 	//square the matrix to the power of n and save it to result, print it
-	squareMatrix(adjecancyMatrix,result, 4);
-	printMatrix(result);
+	squareMatrix(adjecancyMatrix,result, 3);
+
+	//print the power result for tdebugging
+	//printMatrix(result);
 	
 
-
-	printf("kundovina nefunguje");
 	int flippable = 0;
+
+	/*
+	a -> b
+	a -> c
+	a -> d
+	b -> c
+	b -> d
+	c -> d
+	*/
+
 
 	for(int i = 0; i<NUMOFVERTICES ; i++){
 		for(int j = 0; j<NUMOFVERTICES ; j++){
@@ -232,25 +266,19 @@ int main(){
 						}
 					}
 					if(flippable == 4){
-						printf("quadriteral: %s, %s, %s, %s is flipable\n", arr_vert[i]->name,arr_vert[j]->name,arr_vert[k]->name,arr_vert[l]->name);
-						//printf("flippable edge: %s, %s\n", arr_vert[i]->name,arr_vert[k]->name);
+						//printf(" in quadriteral: %s, %s, %s, %s edge %s %s is flipable\n", arr_vert[i]->name,arr_vert[j]->name,arr_vert[k]->name,arr_vert[l]->name, arr_vert[i]->name,arr_vert[k]->name);						//printf("flippable edge: %s, %s\n", arr_vert[i]->name,arr_vert[k]->name);
+						addTuple(atoi(arr_vert[i]->name),atoi(arr_vert[k]->name));
 					}
+					
 					flippable = 0;
 				}
 			}
 		}
 	}
 	
-
+	//listTuples();
 
 	/*
-
-	a -> b
-	a -> c
-	a -> d
-	b -> c
-	b -> d
-	c -> d
 
 
 	*/
