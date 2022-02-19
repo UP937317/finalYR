@@ -145,7 +145,7 @@ void listTuples(void) {
     puts("==========");
 }
 
-//remove edge ver1 -> ver2 from current graph
+//remove edge ver1 -> ver2 from current graph, vertices referenced by their name
 void removeEdgge(char vertex1[], char vertex2[]){
 	Arc *a;
 	Arc *prev;
@@ -258,7 +258,7 @@ int main(){
 	squareMatrix(adjecancyMatrix,result, 1);
 
 	//print result of the operation to the nth power
-	printMatrix(result);
+	//printMatrix(result);
 	
 
 	int flippable = 0;
@@ -313,10 +313,15 @@ int main(){
 		}
 	}
 
-	save_graph(triang, "triang.gb");
-	removeEdgge("0", "2");
-	save_graph(triang, "removed.gb");
+	//first test flip
 
+	printMatrix(adjecancyMatrix);
+
+	//save_graph(triang, "triang.gb");
+	removeEdgge("0", "2");
+	gb_new_edge(arr_vert[5],arr_vert[9]);
+
+	
 	initiateMatrix(adjecancyMatrix);
 	updateArcsInMatrix(adjecancyMatrix);
 	printMatrix(adjecancyMatrix);
