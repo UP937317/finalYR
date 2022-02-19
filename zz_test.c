@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "gb_graph.h"  
+#include "gb_save.h"
 
 #define NUMOFVERTICES 12
 
@@ -59,7 +60,7 @@ void printTESTmatrix(const int** mat[NUMOFVERTICES][NUMOFVERTICES]){
 	}
 }*/
 
-//initiaze matrix to all 0s
+//initiaze adjecancy matrix to all 0s
 void initiateMatrix(int mat1[NUMOFVERTICES][NUMOFVERTICES]){
 	for(int k = 0; k < NUMOFVERTICES; k++){
 		for(int l = 0; l < NUMOFVERTICES; l++){
@@ -69,7 +70,7 @@ void initiateMatrix(int mat1[NUMOFVERTICES][NUMOFVERTICES]){
 
 }
 
-//squares the matrix to the nth power
+//squares adjecancy matrix to the nth power
 void squareMatrix(int mat1[NUMOFVERTICES][NUMOFVERTICES], int result[NUMOFVERTICES][NUMOFVERTICES], int n){
 	int temp[NUMOFVERTICES][NUMOFVERTICES];
 	int sum = 0;
@@ -101,6 +102,7 @@ void squareMatrix(int mat1[NUMOFVERTICES][NUMOFVERTICES], int result[NUMOFVERTIC
 	}
 }
 
+//prints contents of matrix
 void printMatrix(int mat[NUMOFVERTICES][NUMOFVERTICES]){
 	for(int i = 0; i< NUMOFVERTICES; i++){
 		for(int j = 0; j< NUMOFVERTICES ; j++){
@@ -188,7 +190,6 @@ int main(){
 	gb_new_edge(arr_vert[8],arr_vert[4],1L);
 
 	//adjecancy matrix for the graph
-
 	int adjecancyMatrix[NUMOFVERTICES][NUMOFVERTICES];
 
 	//populating adjecancy matrix
@@ -212,28 +213,26 @@ int main(){
 	//print the matrix for tdebugging
 	//printMatrix(adjecancyMatrix);	
 
-	// SQUARING THE MATRIX
+	//raising the matrix to the n power
 	int result[NUMOFVERTICES][NUMOFVERTICES];
 	initiateMatrix(result);
 
 	printf("\n");
 
-	//square the matrix to the power of n and save it to result, print it
+	//square the matrix to the power of n and save it to result
 	squareMatrix(adjecancyMatrix,result, 3);
 
-	//print the power result for tdebugging
+	//print result of the operation to the nth power
 	//printMatrix(result);
 	
 
 	int flippable = 0;
 
 	/*
-	a -> b
-	a -> c
-	a -> d
-	b -> c
-	b -> d
-	c -> d
+	i -> j
+	i -> k
+	i -> l
+	k -> l
 	*/
 
 
@@ -275,11 +274,16 @@ int main(){
 			}
 		}
 	}
+
+	save_graph(triang, "triang.gb");
 	
 	//listTuples();
 
 	/*
-
+	remove edge i -> k
+	add edge j -> l
+	
+	printing graph maybe with print_sample() from test_sample.c
 
 	*/
 	/*define flip function*/
