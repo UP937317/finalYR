@@ -70,6 +70,16 @@ void initiateMatrix(int mat1[NUMOFVERTICES][NUMOFVERTICES]){
 
 }
 
+//update adjecancy matrix mat1 to the current graph
+void updateArcsInMatrix(int mat1[NUMOFVERTICES][NUMOFVERTICES]){
+	for(int j = 0; j<NUMOFVERTICES ; j++){
+		for(Arc *a = arr_vert[j]->arcs; a; a = a->next){
+			int temp = atoi(a->tip->name);
+			mat1[j][temp] = 1;
+		}
+	}
+}
+
 //squares adjecancy matrix to the nth power
 void squareMatrix(int mat1[NUMOFVERTICES][NUMOFVERTICES], int result[NUMOFVERTICES][NUMOFVERTICES], int n){
 	int temp[NUMOFVERTICES][NUMOFVERTICES];
@@ -135,6 +145,34 @@ void listTuples(void) {
     puts("==========");
 }
 
+//remove edge ver1 -> ver2 from current graph
+void removeEdgge(char vertex1[], char vertex2[]){
+	Arc *a;
+	Arc *prev;
+
+	for(int i = 0; i < NUMOFVERTICES; i++){
+		prev = arr_vert[i]->arcs;
+		for(a = arr_vert[i]->arcs; a; a = a->next){
+			//printf("current: %s\n",a->tip->name);
+			//printf("previous: %s\n",prev->tip->name);
+			
+
+			if(!strcmp(vertex1,arr_vert[i]->name) && !strcmp(vertex2,a->tip->name)){
+				printf("removed edge (%s, %s)\n", arr_vert[i]->name, a->tip->name);
+				prev->next = a->next;
+				//free(a);
+			}
+			else if(!strcmp(vertex2,arr_vert[i]->name) && !strcmp(vertex1,a->tip->name)){
+				//remove arc from the linked list
+				printf("removed edge (%s, %s)\n", arr_vert[i]->name, a->tip->name);
+				prev->next = a->next;
+				//free(a);
+			}
+			prev = a;
+		}
+	}
+}
+
 int main(){
 
 	//Constructing triangulated graph, 9-critical, reference 12.57.1 from Boutin paper
@@ -193,6 +231,7 @@ int main(){
 	int adjecancyMatrix[NUMOFVERTICES][NUMOFVERTICES];
 
 	//populating adjecancy matrix
+	//helper arc and vertex
 	Vertex *v;
 	Arc *a;
 
@@ -203,12 +242,8 @@ int main(){
 	//printMatrix(adjecancyMatrix);
 
 	//pupulating matrix with 1s where there is an edge
-	for(int j = 0; j<NUMOFVERTICES ; j++){
-		for(a = arr_vert[j]->arcs; a; a = a->next){
-			int temp = atoi(a->tip->name);
-			adjecancyMatrix[j][temp] = 1;
-		}
-	}
+
+	updateArcsInMatrix(adjecancyMatrix);
 	
 	//print the matrix for tdebugging
 	//printMatrix(adjecancyMatrix);	
@@ -220,10 +255,10 @@ int main(){
 	printf("\n");
 
 	//square the matrix to the power of n and save it to result
-	squareMatrix(adjecancyMatrix,result, 3);
+	squareMatrix(adjecancyMatrix,result, 1);
 
 	//print result of the operation to the nth power
-	//printMatrix(result);
+	printMatrix(result);
 	
 
 	int flippable = 0;
@@ -265,10 +300,13 @@ int main(){
 						}
 					}
 					if(flippable == 4){
-						//printf(" in quadriteral: %s, %s, %s, %s edge %s %s is flipable\n", arr_vert[i]->name,arr_vert[j]->name,arr_vert[k]->name,arr_vert[l]->name, arr_vert[i]->name,arr_vert[k]->name);						//printf("flippable edge: %s, %s\n", arr_vert[i]->name,arr_vert[k]->name);
+						//edge i -> k is flippable to k -> l
 						addTuple(atoi(arr_vert[i]->name),atoi(arr_vert[k]->name));
-					}
-					
+
+						//remove edge i -> from the grahp
+						//add edge k -> l to the graph
+
+					}					
 					flippable = 0;
 				}
 			}
@@ -276,6 +314,12 @@ int main(){
 	}
 
 	save_graph(triang, "triang.gb");
+	removeEdgge("0", "2");
+	save_graph(triang, "removed.gb");
+
+	initiateMatrix(adjecancyMatrix);
+	updateArcsInMatrix(adjecancyMatrix);
+	printMatrix(adjecancyMatrix);
 	
 	//listTuples();
 
