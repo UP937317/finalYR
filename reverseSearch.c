@@ -116,7 +116,7 @@ void squareMatrix(int mat1[NUMOFVERTICES][NUMOFVERTICES], int result[NUMOFVERTIC
 void printMatrix(int mat[NUMOFVERTICES][NUMOFVERTICES]){
 	for(int i = 0; i< NUMOFVERTICES; i++){
 		for(int j = 0; j< NUMOFVERTICES ; j++){
-			printf("%d ", mat[i][j]);
+			printf("%.3d ", mat[i][j]);
 		}
 		printf("\n");
 	}
@@ -313,28 +313,31 @@ int main(){
 		}
 	}
 
-	//first test flip
+	//TESTING FLIPS
 
-	printMatrix(adjecancyMatrix);
+	squareMatrix(adjecancyMatrix,result, 3);
+	printMatrix(result);
 
 	//save_graph(triang, "triang.gb");
-	removeEdgge("0", "2");
-	gb_new_edge(arr_vert[5],arr_vert[9]);
-
+	removeEdgge("1", "2");
+	gb_new_edge(arr_vert[9],arr_vert[10]);
 	
 	initiateMatrix(adjecancyMatrix);
 	updateArcsInMatrix(adjecancyMatrix);
-	printMatrix(adjecancyMatrix);
-	
+	squareMatrix(adjecancyMatrix,result, 3);
+	printMatrix(result);
+	//end of test flip
+
 	//listTuples();
 
-	/*
-	remove edge i -> k
-	add edge j -> l
-	
-	printing graph maybe with print_sample() from test_sample.c
+	//4 legal (1,2 to 9,10) = -11, +12
+	//3 legal (1,2 to 9,10) = -10, +7
 
-	*/
+
+	//4 illegal (8,11 to 3,9) = -2, +30
+	//3 illegal (8,11 to 3,9) = -7, +12
+
+
 	/*define flip function*/
 	/* eliminating valse positives */
 	/* flip two flippable edges and check numbers of paths_2 before and after*/
