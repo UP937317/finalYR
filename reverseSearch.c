@@ -7,7 +7,7 @@
 #define NUMOFVERTICES 12
 
 Area s;
-Vertex *arr_vert[12];
+static Vertex *arr_vert[12];
 
 // reverse search and its functions
 
@@ -132,10 +132,10 @@ typedef struct {
 static flippableEdge allFlips[100];
 static int flippableEcount = 0;
 
-int valueinarray(int vertex1, int vertex2){
+int valueInArray(int vertex1, int vertex2){
     int i;
     for(i = 0; i < sizeof(allFlips) / sizeof(allFlips[0]); i++){
-        if((allFlips[i].ver1 == vertex1 && allFlips[i].ver2 == vertex2)|| (allFlips[i].ver1 == vertex2 && allFlips[i].ver2 == vertex1) ){
+        if((allFlips[i].ver1 == vertex1 && allFlips[i].ver2 == vertex2) || (allFlips[i].ver1 == vertex2 && allFlips[i].ver2 == vertex1)){
             return 1;
         }
     }
@@ -145,7 +145,7 @@ int valueinarray(int vertex1, int vertex2){
 
 //add flippable edge to the array of flippable edges
 void addTuple(int vertex1, int vertex2) {
-	if(valueinarray(vertex1, vertex2)){
+	if(valueInArray(vertex1, vertex2)){
 		return;
 	}
     allFlips[flippableEcount].ver1 = vertex1;
@@ -188,8 +188,6 @@ void removeEdgge(char vertex1[], char vertex2[]){
 }
 
 int neighbours(Vertex *v1, Vertex *v2){
-	printf("kundovina\n");
-	printf("neighbours(%s,%s)\n", v1->name, v2->name);
 	Arc *a;
 	int count = 0;
 	
@@ -205,14 +203,14 @@ int neighbours(Vertex *v1, Vertex *v2){
 	
 }
 
-void flipPossible(Vertex *v1, Vertex *v2){
+void flipPossible(Vertex *v1, Vertex *v2)/*not working*/{
 
 	/*
 	i -> j 
 	i -> k done
 	i -> l
 	k -> l
-	*/
+	
 
 	Arc *temp1;
 	Arc *temp2;
@@ -224,11 +222,10 @@ void flipPossible(Vertex *v1, Vertex *v2){
 			for(temp2 = temp1->tip->arcs;temp2;temp2=temp2->next){
 				//printf("%s to %s\n",temp1->tip->name ,temp2->tip->name);
 				if(!strcmp(temp2->tip->name,v2->name)){
-					printf("%s to %s\n",temp1->tip->name ,temp2->tip->name);
 					mrdka++;
 				}
 			}
-			printf("\n");
+			//printf("\n");
 		}
 		if(mrdka >= 2){
 			printf("flippable\n");
@@ -237,8 +234,73 @@ void flipPossible(Vertex *v1, Vertex *v2){
 			printf("not flippable, mrdka: %d\n", mrdka);
 		}
 	}
-	
+	*/
+	if(valueInArray(atoi(v1->name), atoi(v2->name))){
+		printf("edge (%s, %s) is flippable\n", v1->name, v2->name);
+		return 1;
+	}
+	else{
+		printf("edge (%s, %s) is not flippable\n", v1->name, v2->name);
+		return 0;
+	}
+}
 
+void makeFlipList(){
+
+	//helper arc and vertex
+	Vertex *v;
+	Arc *a;
+	int flippable = 0;
+
+	/*
+	i -> j
+	i -> k
+	i -> l
+	k -> l
+	*/
+
+
+	for(int i = 0; i<NUMOFVERTICES ; i++){
+		for(int j = 0; j<NUMOFVERTICES ; j++){
+			if(i == j){continue;}
+			for(int k = 0; k<NUMOFVERTICES ; k++){
+				if(k == i || k == j){continue;}
+				for(int l = 0; l<NUMOFVERTICES ; l++){
+					if(l == i || l == j || l == k){continue;}
+					for(a = arr_vert[i]->arcs; a; a = a->next){
+						if(a->tip == arr_vert[j]){
+							flippable += 1;
+						}
+						if(a->tip == arr_vert[k]){
+							flippable += 1;
+						}
+						if(a->tip == arr_vert[l]){
+							flippable += 1;
+						}
+					}
+					/*for(a = arr_vert[j]->arcs; a; a = a->next){
+						if(a->tip == arr_vert[k]){
+							flippable += 1;
+						}
+					}*/
+					for(a = arr_vert[k]->arcs; a; a = a->next){
+						if(a->tip == arr_vert[l]){
+							flippable += 1;
+						}
+					}
+					if(flippable == 4){
+						//edge i -> k is flippable to k -> l
+						addTuple(atoi(arr_vert[i]->name),atoi(arr_vert[k]->name));
+
+						//remove edge i -> from the grahp
+						//add edge k -> l to the graph
+
+					}					
+					flippable = 0;
+				}
+			}
+		}
+	}
 }
 
 int main(){
@@ -300,9 +362,6 @@ int main(){
 	int adjecancyMatrix[NUMOFVERTICES][NUMOFVERTICES];
 
 	//populating adjecancy matrix
-	//helper arc and vertex
-	Vertex *v;
-	Arc *a;
 
 	//populating with dummy 0s
 	initiateMatrix(adjecancyMatrix);
@@ -321,66 +380,17 @@ int main(){
 	int result[NUMOFVERTICES][NUMOFVERTICES];
 	initiateMatrix(result);
 
-	printf("\n");
+	//printf("\n");
 
 	//square the matrix to the power of n and save it to result
 	squareMatrix(adjecancyMatrix,result, 1);
 
 	//print result of the operation to the nth power
 	//printMatrix(result);
-	
 
-	int flippable = 0;
-
-	/*
-	i -> j
-	i -> k
-	i -> l
-	k -> l
-	*/
+	makeFlipList();
 
 
-	for(int i = 0; i<NUMOFVERTICES ; i++){
-		for(int j = 0; j<NUMOFVERTICES ; j++){
-			if(i == j){continue;}
-			for(int k = 0; k<NUMOFVERTICES ; k++){
-				if(k == i || k == j){continue;}
-				for(int l = 0; l<NUMOFVERTICES ; l++){
-					if(l == i || l == j || l == k){continue;}
-					for(a = arr_vert[i]->arcs; a; a = a->next){
-						if(a->tip == arr_vert[j]){
-							flippable += 1;
-						}
-						if(a->tip == arr_vert[k]){
-							flippable += 1;
-						}
-						if(a->tip == arr_vert[l]){
-							flippable += 1;
-						}
-					}
-					/*for(a = arr_vert[j]->arcs; a; a = a->next){
-						if(a->tip == arr_vert[k]){
-							flippable += 1;
-						}
-					}*/
-					for(a = arr_vert[k]->arcs; a; a = a->next){
-						if(a->tip == arr_vert[l]){
-							flippable += 1;
-						}
-					}
-					if(flippable == 4){
-						//edge i -> k is flippable to k -> l
-						addTuple(atoi(arr_vert[i]->name),atoi(arr_vert[k]->name));
-
-						//remove edge i -> from the grahp
-						//add edge k -> l to the graph
-
-					}					
-					flippable = 0;
-				}
-			}
-		}
-	}
 
 	//TESTING FLIPS
 
@@ -396,19 +406,10 @@ int main(){
 	squareMatrix(adjecancyMatrix,result, 3);
 	//printMatrix(result);
 
-
-	flipPossible(arr_vert[3],arr_vert[7]);
 	//end of test flip
 
 	listTuples();
-
-	//4 legal (1,2 to 9,10) = -11, +12
-	//3 legal (1,2 to 9,10) = -10, +7
-
-
-	//4 illegal (8,11 to 3,9) = -2, +30
-	//3 illegal (8,11 to 3,9) = -7, +12
-
+	flipPossible(arr_vert[2],arr_vert[3]);
 
 	/*define flip function*/
 	/* eliminating valse positives */
