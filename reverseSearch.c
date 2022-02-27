@@ -173,6 +173,54 @@ void removeEdgge(char vertex1[], char vertex2[]){
 	}
 }
 
+int neighbours(Vertex *v1, Vertex *v2){
+	printf("kundovina\n");
+	printf("neighbours(%s,%s)\n", v1->name, v2->name);
+	Arc *a;
+	int count = 0;
+	
+	for(a = v1->arcs; a; a = a->next){
+		if(!strcmp(a->tip->name,v2->name)){
+			return 1;
+		}
+		count++;
+		if(count >= NUMOFVERTICES){
+			break;
+		}
+	}
+	
+}
+
+void flipPossible(Vertex *v1, Vertex *v2){
+
+	/*
+	i -> j 
+	i -> k done
+	i -> l
+	k -> l
+	*/
+
+	Arc *temp1;
+	Arc *temp2;
+	
+	if(neighbours(v1, v2)){
+	/*
+		for(temp1 = v1->arcs;temp1;temp1=temp1->next){
+			printf("%s to %s\n",v1->name ,temp1->tip->name);
+			for(temp2 = temp1->tip->arcs;temp2;temp2=temp2->next){
+				printf("%s to %s\n",temp1->tip->name ,temp2->tip->name);
+			}
+			printf("\n");
+		}
+	*/
+	}
+	else{
+		return;
+	}
+	
+
+}
+
 int main(){
 
 	//Constructing triangulated graph, 9-critical, reference 12.57.1 from Boutin paper
@@ -316,16 +364,19 @@ int main(){
 	//TESTING FLIPS
 
 	squareMatrix(adjecancyMatrix,result, 3);
-	printMatrix(result);
+	//printMatrix(result);
 
 	//save_graph(triang, "triang.gb");
-	removeEdgge("1", "2");
-	gb_new_edge(arr_vert[9],arr_vert[10]);
+	//removeEdgge("1", "2");
+	//gb_new_edge(arr_vert[9],arr_vert[10]);
 	
 	initiateMatrix(adjecancyMatrix);
 	updateArcsInMatrix(adjecancyMatrix);
 	squareMatrix(adjecancyMatrix,result, 3);
-	printMatrix(result);
+	//printMatrix(result);
+
+
+	flipPossible(arr_vert[1],arr_vert[2]);
 	//end of test flip
 
 	//listTuples();
