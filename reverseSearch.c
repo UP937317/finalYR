@@ -394,22 +394,26 @@ int main(){
 
 	//TESTING FLIPS
 
+	//print matric before flip
 	squareMatrix(adjecancyMatrix,result, 3);
 	//printMatrix(result);
 
-	//save_graph(triang, "triang.gb");
+	//flip edge
 	//removeEdgge("1", "2");
 	//gb_new_edge(arr_vert[9],arr_vert[10]);
 	
+
+	//print matrix after flip
 	initiateMatrix(adjecancyMatrix);
 	updateArcsInMatrix(adjecancyMatrix);
 	squareMatrix(adjecancyMatrix,result, 3);
 	//printMatrix(result);
 
-	//end of test flip
+	//EEND OF TESTING FLIPS
 
 	listTuples();
 	flipPossible(arr_vert[2],arr_vert[3]);
+
 
 	/*define flip function*/
 	/* eliminating valse positives */
