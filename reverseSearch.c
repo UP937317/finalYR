@@ -132,8 +132,22 @@ typedef struct {
 static flippableEdge allFlips[100];
 static int flippableEcount = 0;
 
+int valueinarray(int vertex1, int vertex2){
+    int i;
+    for(i = 0; i < sizeof(allFlips) / sizeof(allFlips[0]); i++){
+        if((allFlips[i].ver1 == vertex1 && allFlips[i].ver2 == vertex2)|| (allFlips[i].ver1 == vertex2 && allFlips[i].ver2 == vertex1) ){
+            return 1;
+        }
+    }
+    return 0;
+}
+
+
 //add flippable edge to the array of flippable edges
 void addTuple(int vertex1, int vertex2) {
+	if(valueinarray(vertex1, vertex2)){
+		return;
+	}
     allFlips[flippableEcount].ver1 = vertex1;
     allFlips[flippableEcount++].ver2 = vertex2;
 }
@@ -185,7 +199,7 @@ int neighbours(Vertex *v1, Vertex *v2){
 		}
 		count++;
 		if(count >= NUMOFVERTICES){
-			break;
+			return 0;
 		}
 	}
 	
@@ -202,20 +216,26 @@ void flipPossible(Vertex *v1, Vertex *v2){
 
 	Arc *temp1;
 	Arc *temp2;
+	int mrdka = 0;
 	
 	if(neighbours(v1, v2)){
-	/*
 		for(temp1 = v1->arcs;temp1;temp1=temp1->next){
-			printf("%s to %s\n",v1->name ,temp1->tip->name);
+			//printf("%s to %s\n",v1->name ,temp1->tip->name);
 			for(temp2 = temp1->tip->arcs;temp2;temp2=temp2->next){
-				printf("%s to %s\n",temp1->tip->name ,temp2->tip->name);
+				//printf("%s to %s\n",temp1->tip->name ,temp2->tip->name);
+				if(!strcmp(temp2->tip->name,v2->name)){
+					printf("%s to %s\n",temp1->tip->name ,temp2->tip->name);
+					mrdka++;
+				}
 			}
 			printf("\n");
 		}
-	*/
-	}
-	else{
-		return;
+		if(mrdka >= 2){
+			printf("flippable\n");
+		}
+		else{
+			printf("not flippable, mrdka: %d\n", mrdka);
+		}
 	}
 	
 
@@ -274,6 +294,7 @@ int main(){
 	gb_new_edge(arr_vert[9],arr_vert[8],1L);
 	gb_new_edge(arr_vert[5],arr_vert[6],1L);
 	gb_new_edge(arr_vert[8],arr_vert[4],1L);
+	gb_new_edge(arr_vert[2],arr_vert[7],1L);
 
 	//adjecancy matrix for the graph
 	int adjecancyMatrix[NUMOFVERTICES][NUMOFVERTICES];
@@ -376,10 +397,10 @@ int main(){
 	//printMatrix(result);
 
 
-	flipPossible(arr_vert[1],arr_vert[2]);
+	flipPossible(arr_vert[3],arr_vert[7]);
 	//end of test flip
 
-	//listTuples();
+	listTuples();
 
 	//4 legal (1,2 to 9,10) = -11, +12
 	//3 legal (1,2 to 9,10) = -10, +7
