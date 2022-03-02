@@ -6,8 +6,11 @@
 
 #define NUMOFVERTICES 12
 
-Area s;
-static Vertex *arr_vert[12];
+//defining tuple for storing flippable edges
+typedef struct {
+    int ver1;
+    int ver2;
+} flippableEdge;
 
 // reverse search and its functions
 
@@ -71,7 +74,7 @@ void initiateMatrix(int mat1[NUMOFVERTICES][NUMOFVERTICES]){
 }
 
 //update adjecancy matrix mat1 to the current graph
-void updateArcsInMatrix(int mat1[NUMOFVERTICES][NUMOFVERTICES]){
+void updateArcsInMatrix(int mat1[NUMOFVERTICES][NUMOFVERTICES], Vertex *arr_vert[]){
 	for(int j = 0; j<NUMOFVERTICES ; j++){
 		for(Arc *a = arr_vert[j]->arcs; a; a = a->next){
 			int temp = atoi(a->tip->name);
@@ -122,19 +125,12 @@ void printMatrix(int mat[NUMOFVERTICES][NUMOFVERTICES]){
 	}
 }
 
-//defining tuple for storing flippable edges
-typedef struct {
-    int ver1;
-    int ver2;
-} flippableEdge;
 
 //helper functions to manipulate tuples of flippable edges
-static flippableEdge allFlips[100];
-static int flippableEcount = 0;
 
-int valueInArray(int vertex1, int vertex2){
+int valueInArray(int vertex1, int vertex2, flippableEdge allFlips[]){
     int i;
-    for(i = 0; i < sizeof(allFlips) / sizeof(allFlips[0]); i++){
+    for(i = 0; i < 101; i++){
         if((allFlips[i].ver1 == vertex1 && allFlips[i].ver2 == vertex2) || (allFlips[i].ver1 == vertex2 && allFlips[i].ver2 == vertex1)){
             return 1;
         }
@@ -144,23 +140,37 @@ int valueInArray(int vertex1, int vertex2){
 
 
 //add flippable edge to the array of flippable edges
-void addTuple(int vertex1, int vertex2) {
-	if(valueInArray(vertex1, vertex2)){
+void addTuple(int vertex1, int vertex2, Vertex *arr_vert[], flippableEdge allFlips[], int *flippableEcount) {
+	
+	if(valueInArray(vertex1, vertex2, allFlips)){
 		return;
 	}
-    allFlips[flippableEcount].ver1 = vertex1;
-    allFlips[flippableEcount++].ver2 = vertex2;
+
+
+	//printf("%d\n", allFlips[*flippableEcount].ver2);
+	
+	//printf("%d, %d\n", vertex1, vertex2);
+    allFlips[*flippableEcount].ver1 = vertex1;
+    allFlips[*flippableEcount].ver2 = vertex2;
+    
+   
+
+    //printf("flippable edge: %d, %d\n", allFlips[*flippableEcount].ver1, allFlips[*flippableEcount].ver2);
+
+    *flippableEcount = *flippableEcount + 1;
+    //printf("%d\n", *flippableEcount);
+    
 }
 
 //list all flippable edges
-void listTuples(void) {
-    for (int i = 0; i < flippableEcount; ++i)
+void listTuples(flippableEdge allFlips[], int *flippableEcount) {
+    for (int i = 0; i < *flippableEcount; ++i)
         printf("flippable edge: (%d,%d)\n", allFlips[i].ver1, allFlips[i].ver2);
     puts("==========");
 }
 
 //remove edge ver1 -> ver2 from current graph, vertices referenced by their name
-void removeEdgge(char vertex1[], char vertex2[]){
+void removeEdgge(char vertex1[], char vertex2[], Vertex *arr_vert[]){
 	Arc *a;
 	Arc *prev;
 
@@ -203,7 +213,7 @@ int neighbours(Vertex *v1, Vertex *v2){
 	
 }
 
-void flipPossible(Vertex *v1, Vertex *v2)/*not working*/{
+void flipPossible(Vertex *v1, Vertex *v2, flippableEdge allFlips[])/*not working*/{
 
 	/*
 	i -> j 
@@ -235,7 +245,7 @@ void flipPossible(Vertex *v1, Vertex *v2)/*not working*/{
 		}
 	}
 	*/
-	if(valueInArray(atoi(v1->name), atoi(v2->name))){
+	if(valueInArray(atoi(v1->name), atoi(v2->name), allFlips)){
 		printf("edge (%s, %s) is flippable\n", v1->name, v2->name);
 		return 1;
 	}
@@ -245,7 +255,7 @@ void flipPossible(Vertex *v1, Vertex *v2)/*not working*/{
 	}
 }
 
-void makeFlipList(){
+void makeFlipList(Vertex *arr_vert[], flippableEdge allFlips[], int *flippableEcount){
 
 	//helper arc and vertex
 	Vertex *v;
@@ -290,7 +300,8 @@ void makeFlipList(){
 					}
 					if(flippable == 4){
 						//edge i -> k is flippable to k -> l
-						addTuple(atoi(arr_vert[i]->name),atoi(arr_vert[k]->name));
+
+						addTuple(atoi(arr_vert[i]->name),atoi(arr_vert[k]->name), arr_vert, allFlips, flippableEcount);
 
 						//remove edge i -> from the grahp
 						//add edge k -> l to the graph
@@ -304,6 +315,8 @@ void makeFlipList(){
 }
 
 int main(){
+	Area s;
+	Vertex *arr_vert[12];
 
 	//Constructing triangulated graph, 9-critical, reference 12.57.1 from Boutin paper
 	Graph *triang = restore_graph("triang.gb");
@@ -312,6 +325,16 @@ int main(){
 	for (int i=1; i<NUMOFVERTICES;i++){
 		arr_vert[i] = arr_vert[0] + i;
 	}
+
+	flippableEdge allFlips[100];
+
+	//initiaze to all 0s, was cousing problems, due to some values in memory
+	for (int i=1; i<sizeof(allFlips)/sizeof(allFlips[0]); i++){
+		allFlips[i].ver1 = 0;
+		allFlips[i].ver2 = 0;
+	}
+
+	int flippableEcount = 0;
 
 	//printf(triang->id);
 
@@ -328,7 +351,7 @@ int main(){
 
 	//pupulating matrix with 1s where there is an edge
 
-	updateArcsInMatrix(adjecancyMatrix);
+	updateArcsInMatrix(adjecancyMatrix, &arr_vert);
 	
 	//print the matrix for tdebugging
 	//printMatrix(adjecancyMatrix);	
@@ -345,7 +368,7 @@ int main(){
 	//print result of the operation to the nth power
 	//printMatrix(result);
 
-	makeFlipList();
+	makeFlipList(&arr_vert, allFlips, &flippableEcount);
 
 
 
@@ -362,14 +385,15 @@ int main(){
 
 	//print matrix after flip
 	initiateMatrix(adjecancyMatrix);
-	updateArcsInMatrix(adjecancyMatrix);
+	updateArcsInMatrix(adjecancyMatrix,&arr_vert);
 	squareMatrix(adjecancyMatrix,result, 3);
 	//printMatrix(result);
 
 	//EEND OF TESTING FLIPS
 
-	listTuples();
-	flipPossible(arr_vert[2],arr_vert[3]);
+	printf("%d\n", flippableEcount);
+	listTuples(allFlips, &flippableEcount);
+	flipPossible(arr_vert[2],arr_vert[3], allFlips);
 
 
 	/*define flip function*/
