@@ -21,21 +21,20 @@ typedef struct {
 
 //defining structure of graph + array of graphs it can be flipped into (graphs of flip distance 1)
 
-typedef flippableTree;
 
-typedef struct flippableTree{
+typedef struct {
 	Graph *graph;
-	flippableTree *neighbourGraph[];
-};
+	struct flippableTree *neighbourGraphs[];
+}flippableTree;
 
 // reverse search and its functions
 
 typedef int perm[100];
-void Adj (perm v, int i) /* adjacency oracle */{}
-int root (perm v){return 1;}/*if vertex is root of reverse search treee*/
-int backtrack (perm v){return 1;}/*from node v to its parent f(v) in reverse search tree*/
-int reverse (perm v, int i){return 1;}/*if neighbour ov v is child of w=f(v) in reverse search tree*/
-int output (perm v)/*Ooutput result + dept(implement!)*/{return 1;}
+void Adj (perm v, int i) /* adjacency oracle *//*should return graph at index i in flippableTree struct*/{}
+int root (perm v){return 1;}/*if vertex is root of reverse search treee*//*if graph is a triang.gb(first loaded graph)?*/
+int backtrack (perm v){return 1;}/*from node v to its parent f(v) in reverse search tree*//*from graph, return its parent in flippableTree struct(from graph in array, return *graph, from the struct)*/
+int reverse (perm v, int i){return 1;}/*if neighbour of v is child of w=f(v) in reverse search tree*//*idk at this point*/
+int output (perm v)/*Ooutput result + dept(implement!)*//*return found graph*/{return 1;}
 
 int reversesearch (perm v, int maxdeg){
 	int i=0, count=1;
@@ -460,8 +459,8 @@ int main(){
 	//printMatrix(result);
 
 	//flip edge
-	//removeEdgge("1", "2");
-	//gb_new_edge(arr_vert[9],arr_vert[10]);
+	//removeEdgge();
+	//gb_new_edge();
 	
 
 	//print matrix after flip
@@ -480,7 +479,12 @@ int main(){
 	Graph *test = flipOneEdge(triang, "0", "3", allFlips);
 	save_graph(test, "new.gb");
 
-	
+
+	//testing reverse search tree structure
+	flippableTree reversesearchTree;
+	reversesearchTree.graph = triang;
+	reversesearchTree.neighbourGraphs[0] = test;
+
 	/*define flip function*/
 	/* eliminating valse positives */
 	/* flip two flippable edges and check numbers of paths_2 before and after*/
