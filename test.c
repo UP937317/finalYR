@@ -12,11 +12,21 @@ typedef struct {
     int ver2;
 } flippableEdge;
 
+//defining structure to store pairs of flippable edges, flippable edge + edge it can be flipped into 
 
 typedef struct {
 	flippableEdge edge1;
 	flippableEdge edge2;
 } flipQuad;
+
+//defining structure of graph + array of graphs it can be flipped into (graphs of flip distance 1)
+
+typedef flippableTree;
+
+typedef struct flippableTree{
+	Graph *graph;
+	flippableTree *neighbourGraph[];
+};
 
 // reverse search and its functions
 
@@ -469,6 +479,8 @@ int main(){
 
 	Graph *test = flipOneEdge(triang, "0", "3", allFlips);
 	save_graph(test, "new.gb");
+
+	
 	/*define flip function*/
 	/* eliminating valse positives */
 	/* flip two flippable edges and check numbers of paths_2 before and after*/
