@@ -20,7 +20,7 @@ typedef struct {
 } flipQuad;
 
 //defining structure of graph + array of graphs it can be flipped into (graphs of flip distance 1)
-
+//used for adjecancy oracle
 
 typedef struct {
 	Graph *graph;
@@ -32,8 +32,8 @@ typedef struct {
 typedef int perm[100];
 void Adj (perm v, int i) /* adjacency oracle *//*should return graph at index i in flippableTree struct*/{}
 int root (perm v){return 1;}/*if vertex is root of reverse search treee*//*if graph is a triang.gb(first loaded graph)?*/
-int backtrack (perm v){return 1;}/*from node v to its parent f(v) in reverse search tree*//*from graph, return its parent in flippableTree struct(from graph in array, return *graph, from the struct)*/
-int reverse (perm v, int i){return 1;}/*if neighbour of v is child of w=f(v) in reverse search tree*//*idk at this point*/
+int backtrack (perm v){return 1;}/*from node v to its parent f(v) in reverse search tree*//*from graph, return its parent in flippableTree struct(from graph in array, return *graph and its index in the array, from the struct)*/
+int reverse (perm v, int i){return 1;}/*if neighbour of v (w = adj(v, i) is a child of v in reverse search tree(true/false)*//*returns true if graph (w = adj(v, i) is in the *neighbourGraphs[]*/
 int output (perm v)/*Ooutput result + dept(implement!)*//*return found graph*/{return 1;}
 
 int reversesearch (perm v, int maxdeg){
