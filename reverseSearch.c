@@ -408,8 +408,6 @@ int main(){
 
 	int flippableEcount = 0;
 
-	//printf(triang->id);
-
 	//adjecancy matrix for the graph
 	int adjecancyMatrix[NUMOFVERTICES][NUMOFVERTICES];
 

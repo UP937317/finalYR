@@ -30,12 +30,8 @@ typedef struct {
 // reverse search and its functions
 
 typedef int perm[100];
-void Adj (perm v, int i) /* adjacency oracle *//*should return graph at index i in flippableTree struct*/{}
-int root (perm v){return 1;}/*if vertex is root of reverse search treee*//*if graph is a triang.gb(first loaded graph)?*/
-int backtrack (perm v){return 1;}/*from node v to its parent f(v) in reverse search tree*//*from graph, return its parent in flippableTree struct(from graph in array, return *graph and its index in the array, from the struct)*/
-int reverse (perm v, int i){return 1;}/*if neighbour of v (w = adj(v, i) is a child of v in reverse search tree(true/false)*//*returns true if graph (w = adj(v, i) is in the *neighbourGraphs[]*/
-int output (perm v)/*Ooutput result + dept(implement!)*//*return found graph*/{return 1;}
 
+/*
 int reversesearch (perm v, int maxdeg){
 	int i=0, count=1;
 	output (v);
@@ -55,6 +51,7 @@ int reversesearch (perm v, int maxdeg){
 	}
 	return count;
 }
+*/
 
 /* //MATRICES WITH POINTERS TEST FUNCTIONS - ADD LATER
 
@@ -284,7 +281,6 @@ void makeFlipList(Vertex *arr_vert[], flipQuad allFlips[], int *flippableEcount)
 	k -> l
 	*/
 
-
 	for(int i = 0; i<NUMOFVERTICES ; i++){
 		for(int j = 0; j<NUMOFVERTICES ; j++){
 			if(i == j){continue;}
@@ -392,12 +388,97 @@ Graph* flipOneEdge(Graph *old, char vertex1[], char vertex2[], flipQuad allFlips
 
 }
 
+Graph* Adj(Graph *g, int i) /* adjacency oracle */{
+	
+	int n = g->n;
+	Vertex *arr_vert[n];
+
+	for (int i=1; i<n;i++){
+		arr_vert[i] = arr_vert[0] + i;
+	}
+
+	flipQuad allFlips[100];
+	int flippableEcount = 0;
+
+	//initiaze to all 0s, was cousing problems, due to some values in memory
+	for (int j=1; j<sizeof(allFlips)/sizeof(allFlips[0]); j++){
+		allFlips[j].edge1.ver1 = 0;
+		allFlips[j].edge1.ver2 = 0;
+		allFlips[j].edge2.ver1 = 0;
+		allFlips[j].edge2.ver2 = 0;
+	}
+
+	makeFlipList(&arr_vert, allFlips, &flippableEcount);
+
+	Graph *adjRetrunGraph = flipOneEdge(g, allFlips[i].edge2.ver1, allFlips[i].edge2.ver2, allFlips);
+	return adjRetrunGraph;
+}
+
+Graph* localSearch(Graph *g){
+
+	int n = g->n;
+	Vertex *arr_vert[n];
+
+	for (int i=1; i<n;i++){
+		arr_vert[i] = arr_vert[0] + i;
+	}
+
+	flipQuad allFlips[100];
+	int flippableEcount = 0;
+
+	//initiaze to all 0s, was cousing problems, due to some old values in memory
+	for (int i=1; i<sizeof(allFlips)/sizeof(allFlips[0]); i++){
+		allFlips[i].edge1.ver1 = 0;
+		allFlips[i].edge1.ver2 = 0;
+		allFlips[i].edge2.ver1 = 0;
+		allFlips[i].edge2.ver2 = 0;
+	}
+
+	makeFlipList(&arr_vert, allFlips, &flippableEcount);
+
+	Graph *adjRetrunGraph = flipOneEdge(g, allFlips[0].edge2.ver1, allFlips[0].edge2.ver2, allFlips);
+	return adjRetrunGraph;
+}
+
+int reverse (Graph *g, int i){
+	Graph *w = Adj(g, i);
+
+	if(w != NULL){
+		return g==localSearch(w);
+	}
+	else{
+		return 0;
+	}
+}
+
+int backtrack (Graph *g){
+	int i = 0;
+	Graph *child = g;
+
+	g = localSearch(g);
+
+	do i++; 
+		while(child != Adj(g, i));
+	return i;
+}
+
+/*int root (Graph *g){
+
+	if(g->id == ){
+		return 1;
+	}
+	else{
+		return 0;
+	}
+}*/
+
 int main(){
 	Area s;
 	Vertex *arr_vert[NUMOFVERTICES];
 
 	//Constructing triangulated graph, 9-critical, reference 12.57.1 from Boutin paper
 	Graph *triang = restore_graph("triang.gb");
+
 	arr_vert[0] = triang->vertices;
 
 	for (int i=1; i<NUMOFVERTICES;i++){
@@ -449,8 +530,6 @@ int main(){
 	//printMatrix(result);
 
 	makeFlipList(&arr_vert, allFlips, &flippableEcount);
-
-
 
 	//TESTING FLIPS
 
