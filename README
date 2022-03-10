@@ -1,0 +1,38 @@
+REVERSE SEARCH README
+
+ADJECANCY ORACLE
+
+Graph Adj (Graph *g, int i){}
+
+We will have graph, and array of it's flippable edges, Adj(graph, i) will return graph with flipped edge at index i
+
+
+LOCAL SEARCH
+
+void localSearch(Graph *g){}
+
+Returns graph with flipped edge, that is at the first index in it's array of flippable edges,
+
+should remove the edge from it???
+
+
+int root (perm v){return 1;}
+
+if vertex is root of reverse search treee*//*if graph is a triang.gb(first loaded graph)?
+
+
+int backtrack (perm v){return 1;}
+
+from node v to its parent f(v) in reverse search tree*//*from graph, return its parent in flippableTree struct(from graph in array, return *graph and its index in the array, from the struct)
+
+
+int reverse (perm v, int i){return 1;}
+
+if neighbour of v (w = adj(v, i) is a child of v in reverse search tree(true/false)
+returns true if graph (w = adj(v, i) is in the *neighbourGraphs[]
+
+
+int output (perm v){}
+
+output result + dept(implement!)
+return found graph
