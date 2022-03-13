@@ -18,7 +18,7 @@ should remove the edge from it???
 
 int root (perm v){return 1;}
 
-if vertex is root of reverse search treee*//*if graph is a triang.gb(first loaded graph)?
+if vertex is root of reverse search tree*//*if graph is a triang.gb(first loaded graph)?
 
 
 int backtrack (perm v){return 1;}
@@ -32,7 +32,7 @@ if neighbour of v (w = adj(v, i) is a child of v in reverse search tree(true/fal
 returns true if graph (w = adj(v, i) is in the *neighbourGraphs[]
 
 
-int output (perm v){}
+int output (){}
 
 output result + dept(implement!)
 return found graph

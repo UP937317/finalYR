@@ -27,32 +27,6 @@ typedef struct {
 	struct flippableTree *neighbourGraphs[];
 }flippableTree;
 
-// reverse search and its functions
-
-typedef int perm[100];
-
-/*
-int reversesearch (perm v, int maxdeg){
-	int i=0, count=1;
-	output (v);
-	while (!root (v) || i < maxdeg){
-		do{
-			i++;
-		}while (i <= maxdeg && !reverse (v, i));
-		if (i <= maxdeg){
-			Adj (v, i);
-			output (v);
-			count++;
-			i = 0;
-		}
-		else{
-			i = backtrack (v);
-		}
-	}
-	return count;
-}
-*/
-
 /* //MATRICES WITH POINTERS TEST FUNCTIONS - ADD LATER
 
 // int** testAdjMatrix = createMatrix(NUMOFVERTICES,NUMOFVERTICES);
@@ -268,7 +242,7 @@ void flipPossible(Vertex *v1, Vertex *v2, flipQuad allFlips[])/*not working*/{
 }
 
 void makeFlipList(Vertex *arr_vert[], flipQuad allFlips[], int *flippableEcount){
-
+	printf("debug 0\n");
 	//helper arc and vertex
 	Vertex *v;
 	Arc *a;
@@ -288,7 +262,9 @@ void makeFlipList(Vertex *arr_vert[], flipQuad allFlips[], int *flippableEcount)
 				if(k == i || k == j){continue;}
 				for(int l = 0; l<NUMOFVERTICES ; l++){
 					if(l == i || l == j || l == k){continue;}
+					printf("debug 1\n");
 					for(a = arr_vert[i]->arcs; a; a = a->next){
+						printf("debug 2\n");
 						if(a->tip == arr_vert[j]){
 							flippable += 1;
 						}
@@ -391,26 +367,26 @@ Graph* flipOneEdge(Graph *old, char vertex1[], char vertex2[], flipQuad allFlips
 Graph* Adj(Graph *g, int i) /* adjacency oracle */{
 	
 	int n = g->n;
-	Vertex *arr_vert[n];
+	Vertex *array_of_vertices[n];
 
 	for (int i=1; i<n;i++){
-		arr_vert[i] = arr_vert[0] + i;
+		array_of_vertices[i] = array_of_vertices[0] + i;
 	}
 
-	flipQuad allFlips[100];
+	flipQuad allPossibleFlips[100];
 	int flippableEcount = 0;
 
 	//initiaze to all 0s, was cousing problems, due to some values in memory
-	for (int j=1; j<sizeof(allFlips)/sizeof(allFlips[0]); j++){
-		allFlips[j].edge1.ver1 = 0;
-		allFlips[j].edge1.ver2 = 0;
-		allFlips[j].edge2.ver1 = 0;
-		allFlips[j].edge2.ver2 = 0;
+	for (int j=1; j<sizeof(allPossibleFlips)/sizeof(allPossibleFlips[0]); j++){
+		allPossibleFlips[j].edge1.ver1 = 0;
+		allPossibleFlips[j].edge1.ver2 = 0;
+		allPossibleFlips[j].edge2.ver1 = 0;
+		allPossibleFlips[j].edge2.ver2 = 0;
 	}
 
-	makeFlipList(&arr_vert, allFlips, &flippableEcount);
+	makeFlipList(&array_of_vertices, allPossibleFlips, &flippableEcount);
 
-	Graph *adjRetrunGraph = flipOneEdge(g, allFlips[i].edge2.ver1, allFlips[i].edge2.ver2, allFlips);
+	Graph *adjRetrunGraph = flipOneEdge(g, allPossibleFlips[i].edge2.ver1, allPossibleFlips[i].edge2.ver2, allPossibleFlips);
 	return adjRetrunGraph;
 }
 
@@ -451,7 +427,7 @@ int reverse (Graph *g, int i){
 	}
 }
 
-int backtrack (Graph *g){
+int backtrack(Graph *g){
 	int i = 0;
 	Graph *child = g;
 
@@ -462,15 +438,44 @@ int backtrack (Graph *g){
 	return i;
 }
 
-/*int root (Graph *g){
-
-	if(g->id == ){
+int root(Graph *g){
+	
+	if(!strcmp(g->id, "start")){
 		return 1;
 	}
 	else{
 		return 0;
 	}
-}*/
+}
+
+void output(Graph *g){
+	printf("graph: %s, dept not known\n", g->id);
+}
+
+// reverse search
+
+int reversesearch(Graph *g, int maxdeg){
+	int i=0, count=1;
+	output(g);
+	//printf("%d\n", maxdeg);
+	while (!root(g) || i < maxdeg){
+		do{
+			i++;
+		}while (i <= maxdeg && !reverse(g, i));
+		if (i <= maxdeg){
+
+			printf("debug\n");
+			//Adj(g, i);
+			output(g);
+			count++;
+			i = 0;
+		}
+		else{
+			i = backtrack(g);
+		}
+	}
+	return count;
+}
 
 int main(){
 	Area s;
@@ -478,6 +483,11 @@ int main(){
 
 	//Constructing triangulated graph, 9-critical, reference 12.57.1 from Boutin paper
 	Graph *triang = restore_graph("triang.gb");
+
+	//set ID od the loaded graph for root() function
+	char rootID[] =  "start";
+	strcpy(triang->id, rootID);
+	//printf("%s\n", triang->id);
 
 	arr_vert[0] = triang->vertices;
 
@@ -538,9 +548,6 @@ int main(){
 	//printMatrix(result);
 
 	//flip edge
-	//removeEdgge();
-	//gb_new_edge();
-	
 
 	//print matrix after flip
 	initiateMatrix(adjecancyMatrix);
@@ -552,19 +559,11 @@ int main(){
 
 	printf("%d\n", flippableEcount);
 	listTuples(allFlips, &flippableEcount);
-	//flipPossible(arr_vert[2],arr_vert[3], allFlips);
 
+	//Graph *test = flipOneEdge(triang, "0", "3", allFlips);
 
-	Graph *test = flipOneEdge(triang, "0", "3", allFlips);
-	save_graph(test, "new.gb");
+	Graph *test = Adj(triang, 1);
+	//save_graph(test, "new.gb");
 
-
-	//testing reverse search tree structure
-	flippableTree reversesearchTree;
-	reversesearchTree.graph = triang;
-	reversesearchTree.neighbourGraphs[0] = test;
-
-	/*define flip function*/
-	/* eliminating valse positives */
-	/* flip two flippable edges and check numbers of paths_2 before and after*/
+	//int idk = reversesearch(triang, flippableEcount);
 }
