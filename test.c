@@ -242,7 +242,6 @@ void flipPossible(Vertex *v1, Vertex *v2, flipQuad allFlips[])/*not working*/{
 }
 
 void makeFlipList(Vertex *arr_vert[], flipQuad allFlips[], int *flippableEcount){
-	printf("debug 0\n");
 	//helper arc and vertex
 	Vertex *v;
 	Arc *a;
@@ -262,9 +261,9 @@ void makeFlipList(Vertex *arr_vert[], flipQuad allFlips[], int *flippableEcount)
 				if(k == i || k == j){continue;}
 				for(int l = 0; l<NUMOFVERTICES ; l++){
 					if(l == i || l == j || l == k){continue;}
-					printf("debug 1\n");
+					//printf("debug 1\n");
 					for(a = arr_vert[i]->arcs; a; a = a->next){
-						printf("debug 2\n");
+						//printf("debug 2\n");
 						if(a->tip == arr_vert[j]){
 							flippable += 1;
 						}
@@ -289,7 +288,6 @@ void makeFlipList(Vertex *arr_vert[], flipQuad allFlips[], int *flippableEcount)
 						//edge i -> k is flippable to k -> l
 
 						addTuple(atoi(arr_vert[i]->name),atoi(arr_vert[k]->name), atoi(arr_vert[j]->name),atoi(arr_vert[l]->name), arr_vert, allFlips, flippableEcount);
-
 						//remove edge i -> from the grahp
 						//add edge k -> l to the graph
 
@@ -369,6 +367,8 @@ Graph* Adj(Graph *g, int i) /* adjacency oracle */{
 	int n = g->n;
 	Vertex *array_of_vertices[n];
 
+	array_of_vertices[0] = g->vertices;
+
 	for (int i=1; i<n;i++){
 		array_of_vertices[i] = array_of_vertices[0] + i;
 	}
@@ -384,8 +384,9 @@ Graph* Adj(Graph *g, int i) /* adjacency oracle */{
 		allPossibleFlips[j].edge2.ver2 = 0;
 	}
 
-	makeFlipList(&array_of_vertices, allPossibleFlips, &flippableEcount);
+	//makeFlipList(&array_of_vertices, allPossibleFlips, &flippableEcount);
 
+	printf("%d, %d\n", allPossibleFlips[i].edge2.ver1, allPossibleFlips[i].edge2.ver2);
 	Graph *adjRetrunGraph = flipOneEdge(g, allPossibleFlips[i].edge2.ver1, allPossibleFlips[i].edge2.ver2, allPossibleFlips);
 	return adjRetrunGraph;
 }
@@ -411,7 +412,6 @@ Graph* localSearch(Graph *g){
 	}
 
 	makeFlipList(&arr_vert, allFlips, &flippableEcount);
-
 	Graph *adjRetrunGraph = flipOneEdge(g, allFlips[0].edge2.ver1, allFlips[0].edge2.ver2, allFlips);
 	return adjRetrunGraph;
 }
@@ -558,10 +558,12 @@ int main(){
 	//EEND OF TESTING FLIPS
 
 	printf("%d\n", flippableEcount);
-	listTuples(allFlips, &flippableEcount);
+
+	//listTuples(allFlips, &flippableEcount);
 
 	//Graph *test = flipOneEdge(triang, "0", "3", allFlips);
 
+	printf("Adj ==========================================\n");
 	Graph *test = Adj(triang, 1);
 	//save_graph(test, "new.gb");
 
