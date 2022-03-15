@@ -159,7 +159,7 @@ void listTuples(flipQuad allFlips[], int *flippableEcount) {
 }
 
 //remove edge ver1 -> ver2 from current graph, vertices referenced by their name
-void removeEdgge(char vertex1[], char vertex2[], Vertex *arr_vert[]){
+void removeEdgge(int vertex1, int vertex2, Vertex *arr_vert[]){
 	Arc *a;
 	Arc *prev;
 	for(int i = 0; i < NUMOFVERTICES; i++){
@@ -167,14 +167,14 @@ void removeEdgge(char vertex1[], char vertex2[], Vertex *arr_vert[]){
 		for(a = arr_vert[i]->arcs; a; a = a->next){
 			//printf("current: %s\n",a->tip->name);
 			//printf("previous: %s\n",prev->tip->name);
-			if(!strcmp(vertex1,arr_vert[i]->name) && !strcmp(vertex2,a->tip->name)){
-				printf("removed edge (%s, %s)\n", arr_vert[i]->name, a->tip->name);
+			if((vertex1 == atoi(arr_vert[i]->name)) && (vertex2 == atoi(a->tip->name))){
+				//printf("removed edge (%s, %s)\n", arr_vert[i]->name, a->tip->name);
 				prev->next = a->next;
 				//free(a);
 			}
-			else if(!strcmp(vertex2,arr_vert[i]->name) && !strcmp(vertex1,a->tip->name)){
+			else if((vertex2 == atoi(arr_vert[i]->name)) && (vertex1 == atoi(a->tip->name))){
 				//remove arc from the linked list
-				printf("removed edge (%s, %s)\n", arr_vert[i]->name, a->tip->name);
+				//printf("removed edge (%s, %s)\n", arr_vert[i]->name, a->tip->name);
 				prev->next = a->next;
 				//free(a);
 			}
@@ -300,10 +300,10 @@ void makeFlipList(Vertex *arr_vert[], flipQuad allFlips[], int *flippableEcount)
 }
 
 
-flippableEdge getOtherPair(char vertex1[], char vertex2[], flipQuad allFlips[]){
+flippableEdge getOtherPair(int vertex1, int vertex2, flipQuad allFlips[]){
     int i;
     for(i = 0; i < 101; i++){
-        if((allFlips[i].edge1.ver1 == atoi(vertex1) && allFlips[i].edge1.ver2 == atoi(vertex2)) || (allFlips[i].edge1.ver1 == atoi(vertex2) && allFlips[i].edge1.ver2 == atoi(vertex1))){
+        if((allFlips[i].edge1.ver1 == vertex1 && allFlips[i].edge1.ver2 == vertex2) || (allFlips[i].edge1.ver1 == vertex2 && allFlips[i].edge1.ver2 == vertex1)){
             return allFlips[i].edge2;
         }
     }
@@ -314,8 +314,9 @@ flippableEdge getOtherPair(char vertex1[], char vertex2[], flipQuad allFlips[]){
 
 
 // getsgraph as input and returns another graph with flipped edge
-Graph* flipOneEdge(Graph *old, char vertex1[], char vertex2[], flipQuad allFlips[]){
+Graph* flipOneEdge(Graph *old, int vertex1, int vertex2, flipQuad allFlips[]){
 
+	printf("flipone: %d, %d\n", vertex1, vertex2);
 	int n = old->n;
 	Graph *new = gb_new_graph(n);
 
@@ -353,8 +354,10 @@ Graph* flipOneEdge(Graph *old, char vertex1[], char vertex2[], flipQuad allFlips
 	//flip the specified edges in the new graph
 
 	flippableEdge newEdge = getOtherPair(vertex1, vertex2, allFlips);
+	
 	gb_new_edge(new_vert_arr[newEdge.ver1], new_vert_arr[newEdge.ver2], 1L);
-	printf("new edge added: %d, %d\n", newEdge.ver1,newEdge.ver2);
+	//printf("new edge added: %d, %d\n", newEdge.ver1,newEdge.ver2);
+
 	removeEdgge(vertex1, vertex2, new_vert_arr);
 
 	//return new graph with flipped edge
@@ -384,9 +387,9 @@ Graph* Adj(Graph *g, int i) /* adjacency oracle */{
 		allPossibleFlips[j].edge2.ver2 = 0;
 	}
 
-	//makeFlipList(&array_of_vertices, allPossibleFlips, &flippableEcount);
+	makeFlipList(&array_of_vertices, allPossibleFlips, &flippableEcount);
 
-	printf("%d, %d\n", allPossibleFlips[i].edge2.ver1, allPossibleFlips[i].edge2.ver2);
+	//printf("enumerated edge: %d, %d\n", allPossibleFlips[i].edge2.ver1, allPossibleFlips[i].edge2.ver2);
 	Graph *adjRetrunGraph = flipOneEdge(g, allPossibleFlips[i].edge2.ver1, allPossibleFlips[i].edge2.ver2, allPossibleFlips);
 	return adjRetrunGraph;
 }
@@ -563,9 +566,9 @@ int main(){
 
 	//Graph *test = flipOneEdge(triang, "0", "3", allFlips);
 
-	printf("Adj ==========================================\n");
+	printf("reverse ==========================================\n");
 	Graph *test = Adj(triang, 1);
 	//save_graph(test, "new.gb");
 
-	//int idk = reversesearch(triang, flippableEcount);
+//	int idk = reversesearch(triang, flippableEcount);
 }
