@@ -419,6 +419,7 @@ Graph* localSearch(Graph *g){
 	return adjRetrunGraph;
 }
 
+//if if neighbour w of g is child og g in reverse search tree
 int reverse (Graph *g, int i){
 	Graph *w = Adj(g, i);
 
@@ -430,6 +431,7 @@ int reverse (Graph *g, int i){
 	}
 }
 
+//look for a parent of g in reverse search tree (w = localsearch(g)), return its i g = (adj(w,i))
 int backtrack(Graph *g){
 	int i = 0;
 	Graph *child = g;
