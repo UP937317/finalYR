@@ -445,7 +445,8 @@ int backtrack(Graph *g){
 
 	g = localSearch(g);
 
-	do i++; 
+	do i++;
+		//mistake, this wont ever return 1, needs rework
 		while(child != Adj(g, i));
 	return i;
 }
@@ -480,6 +481,7 @@ int reversesearch(Graph *g, int maxdeg){
 
 			printf("kundovina\n");
 			g = Adj(g, i);
+			//printf("%s\n", g->id);
 			output(g);
 			count++;
 			i = 0;
