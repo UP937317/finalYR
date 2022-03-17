@@ -315,8 +315,9 @@ flippableEdge getOtherPair(int vertex1, int vertex2, flipQuad allFlips[]){
 
 // getsgraph as input and returns another graph with flipped edge
 Graph* flipOneEdge(Graph *old, int vertex1, int vertex2, flipQuad allFlips[]){
+	
+	//printf("flipone: %d, %d\n", vertex1, vertex2);
 
-	printf("flipone: %d, %d\n", vertex1, vertex2);
 	int n = old->n;
 	Graph *new = gb_new_graph(n);
 
@@ -334,8 +335,9 @@ Graph* flipOneEdge(Graph *old, int vertex1, int vertex2, flipQuad allFlips[]){
 	Arc *a;
 
 	switch_to_graph(new);
-
 	//naming of vertices
+
+
 	for (int i=0; i<n;i++){
 		v = old->vertices + i;
 		if(v < old->vertices + old->n){
@@ -343,16 +345,15 @@ Graph* flipOneEdge(Graph *old, int vertex1, int vertex2, flipQuad allFlips[]){
 		}
 	}
 
-	//edges
+	//adding edges
 
 	for(v = old->vertices; v < old->vertices + old->n; v++){
 		for(a = v->arcs; a; a = a->next){
 			gb_new_arc(new_vert_arr[atoi(v->name)],new_vert_arr[atoi(a->tip->name)]);
 		}
 	}
-
+	printf("debug\n");
 	//flip the specified edges in the new graph
-
 	flippableEdge newEdge = getOtherPair(vertex1, vertex2, allFlips);
 	
 	gb_new_edge(new_vert_arr[newEdge.ver1], new_vert_arr[newEdge.ver2], 1L);
@@ -366,6 +367,7 @@ Graph* flipOneEdge(Graph *old, int vertex1, int vertex2, flipQuad allFlips[]){
 }
 
 Graph* Adj(Graph *g, int i) /* adjacency oracle */{
+	printf("Adj(some graph, %d)\n", i);
 	
 	int n = g->n;
 	Vertex *array_of_vertices[n];
@@ -396,8 +398,11 @@ Graph* Adj(Graph *g, int i) /* adjacency oracle */{
 
 Graph* localSearch(Graph *g){
 
+	printf("localsearch(some graph)\n");
 	int n = g->n;
 	Vertex *arr_vert[n];
+
+	arr_vert[0] = g->vertices;
 
 	for (int i=1; i<n;i++){
 		arr_vert[i] = arr_vert[0] + i;
@@ -421,6 +426,7 @@ Graph* localSearch(Graph *g){
 
 //if if neighbour w of g is child og g in reverse search tree
 int reverse (Graph *g, int i){
+	printf("reverse(some graph, %d)\n", i);
 	Graph *w = Adj(g, i);
 
 	if(w != NULL){
@@ -433,6 +439,7 @@ int reverse (Graph *g, int i){
 
 //look for a parent of g in reverse search tree (w = localsearch(g)), return its i g = (adj(w,i))
 int backtrack(Graph *g){
+	printf("backtrack(some graph)\n");
 	int i = 0;
 	Graph *child = g;
 
@@ -444,6 +451,7 @@ int backtrack(Graph *g){
 }
 
 int root(Graph *g){
+	//printf("root(some graph)\n");
 	
 	if(!strcmp(g->id, "start")){
 		return 1;
@@ -454,7 +462,7 @@ int root(Graph *g){
 }
 
 void output(Graph *g){
-	printf("graph: %s, dept not known\n", g->id);
+	printf("output: graph: %s, dept not known\n", g->id);
 }
 
 // reverse search
@@ -466,11 +474,12 @@ int reversesearch(Graph *g, int maxdeg){
 	while (!root(g) || i < maxdeg){
 		do{
 			i++;
+			printf("depth: %d\n", i);
 		}while (i <= maxdeg && !reverse(g, i));
 		if (i <= maxdeg){
 
-			printf("debug\n");
-			//Adj(g, i);
+			printf("kundovina\n");
+			g = Adj(g, i);
 			output(g);
 			count++;
 			i = 0;
@@ -569,8 +578,12 @@ int main(){
 	//Graph *test = flipOneEdge(triang, "0", "3", allFlips);
 
 	printf("reverse ==========================================\n");
-	Graph *test = Adj(triang, 1);
+
+	//Graph *test = flipOneEdge(triang,2,3, allFlips);
+	//Graph *test2 = localSearch(test);
+
+	//Graph *test = localSearch(triang);
 	//save_graph(test, "new.gb");
 
-//	int idk = reversesearch(triang, flippableEcount);
+	int idk = reversesearch(triang, flippableEcount);
 }
