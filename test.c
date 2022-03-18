@@ -3,6 +3,7 @@
 #include <string.h>
 #include "gb_graph.h"  
 #include "gb_save.h"
+#include "gb_basic.h"	
 
 #define NUMOFVERTICES 12
 
@@ -352,7 +353,7 @@ Graph* flipOneEdge(Graph *old, int vertex1, int vertex2, flipQuad allFlips[]){
 			gb_new_arc(new_vert_arr[atoi(v->name)],new_vert_arr[atoi(a->tip->name)]);
 		}
 	}
-	printf("debug\n");
+	printf("\n");
 	//flip the specified edges in the new graph
 	flippableEdge newEdge = getOtherPair(vertex1, vertex2, allFlips);
 	
@@ -367,7 +368,7 @@ Graph* flipOneEdge(Graph *old, int vertex1, int vertex2, flipQuad allFlips[]){
 }
 
 Graph* Adj(Graph *g, int i) /* adjacency oracle */{
-	printf("Adj(some graph, %d)\n", i);
+	//printf("Adj(some graph, %d)\n", i);
 	
 	int n = g->n;
 	Vertex *array_of_vertices[n];
@@ -398,7 +399,7 @@ Graph* Adj(Graph *g, int i) /* adjacency oracle */{
 
 Graph* localSearch(Graph *g){
 
-	printf("localsearch(some graph)\n");
+	//printf("localsearch(some graph)\n");
 	int n = g->n;
 	Vertex *arr_vert[n];
 
@@ -426,7 +427,7 @@ Graph* localSearch(Graph *g){
 
 //if if neighbour w of g is child og g in reverse search tree
 int reverse (Graph *g, int i){
-	printf("reverse(some graph, %d)\n", i);
+	//printf("reverse(some graph, %d)\n", i);
 	Graph *w = Adj(g, i);
 
 	if(w != NULL){
@@ -437,17 +438,36 @@ int reverse (Graph *g, int i){
 	}
 }
 
+//return number of arcs in the graph g
+int numberOfArcs(Graph *g){
+	//printf("numberOfArcs()\n");
+	Vertex *v;
+	Arc *a;
+	int count = 0;
+
+	for(v = g->vertices; v < g->vertices + g->n; v++){
+		for(a = v->arcs; a; a = a->next){
+			count++;
+		}
+	}
+	return count;
+}
+
 //look for a parent of g in reverse search tree (w = localsearch(g)), return its i g = (adj(w,i))
 int backtrack(Graph *g){
-	printf("backtrack(some graph)\n");
+	//printf("backtrack(some graph)\n");
 	int i = 0;
 	Graph *child = g;
+	int targetedArcs = numberOfArcs(child);
+	Graph *intersect = intersection(child, Adj(g, i),0,0);
 
 	g = localSearch(g);
-
-	do i++;
-		//mistake, this wont ever return 1, needs rework
-		while(child != Adj(g, i));
+	
+	while(targetedArcs != numberOfArcs(intersect)){
+		gb_recycle(intersect);
+		intersect = intersection(child, Adj(g, i),0,0);
+		i++;
+	}
 	return i;
 }
 
@@ -582,7 +602,8 @@ int main(){
 	printf("reverse ==========================================\n");
 
 	//Graph *test = flipOneEdge(triang,2,3, allFlips);
-	//Graph *test2 = localSearch(test);
+	//int mrdka = backtrack(triang);
+	//printf("%d\n", mrdka);
 
 	//Graph *test = localSearch(triang);
 	//save_graph(test, "new.gb");
