@@ -401,8 +401,22 @@ Graph* Adj(Graph *g, int i) /* adjacency oracle */{
 int comparer(const void *v1, const void *v2){
 	const flipQuad *flippableEdge1 = (flipQuad *)v1;
 	const flipQuad *flippableEdge2 = (flipQuad *)v2;
-	if((flippableEdge1->edge1.ver1 < flippableEdge2->edge1.ver1) && (flippableEdge1->edge1.ver2 < flippableEdge2->edge1.ver2)){
+
+	
+	if((flippableEdge1->edge1.ver1 == flippableEdge2->edge1.ver1) && (flippableEdge1->edge1.ver2 < flippableEdge2->edge1.ver2)){
 		return -1;
+	}
+	else if((flippableEdge1->edge1.ver1 < flippableEdge2->edge1.ver1) && (flippableEdge1->edge1.ver2 > flippableEdge2->edge1.ver2)){
+		return -1;
+	}
+	else if((flippableEdge1->edge1.ver1 < flippableEdge2->edge1.ver1) && (flippableEdge1->edge1.ver2 < flippableEdge2->edge1.ver2)){
+		return -1;
+	}
+	else if((flippableEdge1->edge1.ver1 == flippableEdge2->edge1.ver1) && (flippableEdge1->edge1.ver2 > flippableEdge2->edge1.ver2)){
+
+	}
+	else if((flippableEdge1->edge1.ver1 > flippableEdge2->edge2.ver1) && (flippableEdge1->edge1.ver2 < flippableEdge2->edge1.ver2)){
+		return +1;
 	}
 	else if((flippableEdge1->edge1.ver1 > flippableEdge2->edge2.ver1) && (flippableEdge1->edge1.ver2 > flippableEdge2->edge1.ver2)){
 		return +1;
@@ -413,8 +427,8 @@ int comparer(const void *v1, const void *v2){
 }
 
 //order array of flippable edges lexicographically
-void lexicographicOrder(flipQuad allFlips[]){
-	qsort(allFlips,sizeof(allFlips) - sizeof(allFlips[0]), sizeof(flipQuad), comparer);
+void lexicographicOrder(flipQuad allFlips[], int flippableEcount){
+	qsort(allFlips,flippableEcount, sizeof(flipQuad), comparer);
 }
 
 Graph* localSearch(Graph *g){
@@ -596,6 +610,10 @@ int main(){
 	//printMatrix(result);
 
 	makeFlipList(&arr_vert, allFlips, &flippableEcount);
+	listTuples(allFlips, &flippableEcount);
+	lexicographicOrder(allFlips, flippableEcount);
+	listTuples(allFlips, &flippableEcount);
+
 
 	//TESTING FLIPS
 
@@ -615,8 +633,6 @@ int main(){
 
 	printf("%d\n", flippableEcount);
 
-	//listTuples(allFlips, &flippableEcount);
-
 	//Graph *test = flipOneEdge(triang, "0", "3", allFlips);
 
 	printf("reverse ==========================================\n");
@@ -628,5 +644,5 @@ int main(){
 	//Graph *test = localSearch(triang);
 	//save_graph(test, "new.gb");
 
-	int idk = reversesearch(triang, flippableEcount);
+	//int idk = reversesearch(triang, flippableEcount);
 }
