@@ -397,6 +397,26 @@ Graph* Adj(Graph *g, int i) /* adjacency oracle */{
 	return adjRetrunGraph;
 }
 
+//subfunction comparer for qsort sorting function(to compare two flippable edges)
+int comparer(const void *v1, const void *v2){
+	const flipQuad *flippableEdge1 = (flipQuad *)v1;
+	const flipQuad *flippableEdge2 = (flipQuad *)v2;
+	if((flippableEdge1->edge1.ver1 < flippableEdge2->edge1.ver1) && (flippableEdge1->edge1.ver2 < flippableEdge2->edge1.ver2)){
+		return -1;
+	}
+	else if((flippableEdge1->edge1.ver1 > flippableEdge2->edge2.ver1) && (flippableEdge1->edge1.ver2 > flippableEdge2->edge1.ver2)){
+		return +1;
+	}
+	else{
+		return 0;	
+	}
+}
+
+//order array of flippable edges lexicographically
+void lexicographicOrder(flipQuad allFlips[]){
+	qsort(allFlips,sizeof(allFlips) - sizeof(allFlips[0]), sizeof(flipQuad), comparer);
+}
+
 Graph* localSearch(Graph *g){
 
 	//printf("localsearch(some graph)\n");
@@ -438,7 +458,7 @@ int reverse (Graph *g, int i){
 	}
 }
 
-//return number of arcs in the graph g
+//return number of arcs in the graph g, used in backtreack()
 int numberOfArcs(Graph *g){
 	//printf("numberOfArcs()\n");
 	Vertex *v;
