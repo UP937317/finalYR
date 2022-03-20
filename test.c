@@ -210,7 +210,7 @@ void removeEdgge(int vertex1, int vertex2, Vertex *arr_vert[]){
 		for(a = arr_vert[i]->arcs; a; a = a->next){
 			//printf("previous: %s\n",prev->tip->name);
 			if((vertex1 == atoi(arr_vert[i]->name)) && (vertex2 == atoi(a->tip->name))){
-				printf("removed arc (%s, %s), %d\n", arr_vert[i]->name, a->tip->name, i);
+				//printf("removed arc (%s, %s), %d\n", arr_vert[i]->name, a->tip->name, i);
 				if(nodeOrder == 0){
 					arr_vert[i]->arcs = a->next;
 					continue;
@@ -222,7 +222,7 @@ void removeEdgge(int vertex1, int vertex2, Vertex *arr_vert[]){
 			}
 			else if((vertex2 == atoi(arr_vert[i]->name)) && (vertex1 == atoi(a->tip->name))){
 				//remove arc from the linked list
-				printf("removed arc (%s, %s), %d\n", arr_vert[i]->name, a->tip->name, i);
+				//printf("removed arc (%s, %s), %d\n", arr_vert[i]->name, a->tip->name, i);
 				if(nodeOrder == 0){
 					arr_vert[i]->arcs = a->next;
 					continue;
@@ -406,11 +406,11 @@ Graph* flipOneEdge(Graph *old, flipQuad edgeToFlip, flipQuad allFlips[]){
 			gb_new_arc(new_vert_arr[atoi(v->name)],new_vert_arr[atoi(a->tip->name)]);
 		}
 	}
-	printf("flipped edge (%d, %d)", edgeToFlip.edge1.ver1, edgeToFlip.edge1.ver2);
+	//printf("flipped edge (%d, %d)", edgeToFlip.edge1.ver1, edgeToFlip.edge1.ver2);
 	printf("\n");
 	//flip the specified edges in the new graph
 	//flippableEdge newEdge = getOtherPair(vertex1, vertex2, allFlips);
-	printf("to edge: (%d, %d)\n", edgeToFlip.edge2.ver1, edgeToFlip.edge2.ver2);
+	//printf("to edge: (%d, %d)\n", edgeToFlip.edge2.ver1, edgeToFlip.edge2.ver2);
 	
 	gb_new_edge(new_vert_arr[edgeToFlip.edge2.ver1], new_vert_arr[edgeToFlip.edge2.ver2], 1L);
 	//printf("new edge added: %d, %d\n", newEdge.ver1,newEdge.ver2);
@@ -422,7 +422,7 @@ Graph* flipOneEdge(Graph *old, flipQuad edgeToFlip, flipQuad allFlips[]){
 }
 
 Graph* Adj(Graph *g, int i) /* adjacency oracle */{
-	printf("Adj(some graph, %d)\n", i);
+	//printf("Adj(some graph, %d)\n", i);
 	
 	int n = g->n;
 	Vertex *array_of_vertices[n];
@@ -509,7 +509,7 @@ Graph* localSearch(Graph *g){
 
 	makeFlipList(&arr_vert, allFlips, &flippableEcount);
 	lexicographicOrder(allFlips, flippableEcount);
-	Graph *adjRetrunGraph = flipOneEdge(g, allFlips[18], allFlips);
+	Graph *adjRetrunGraph = flipOneEdge(g, allFlips[flippableEcount-1], allFlips);
 	return adjRetrunGraph;
 }
 
@@ -553,29 +553,20 @@ Iam looking fo i such that
 g = Adj(w,i)
 */
 int backtrack(Graph *g){
-	printf("backtrack(some graph)\n");
+	//printf("backtrack(some graph)\n");
 	int i = 0;
 	Graph *child = g;
 	int targetedArcs = numberOfArcs(child);
-	printf("%d\n", targetedArcs);
+	Graph *intersect = intersection(child, Adj(g, i),0,0);
 
 	/*w*/g = localSearch(g);
-
-	//int currentNumOfArcs = numberOfArcs(intersect);
 	
-	for(int j = 0; j < 100;j++){
-		Graph *intersect = intersection(child, Adj(g, j),0,0);
-		printf("%d\n", numberOfArcs(intersect));
-	}
-
-
-	/*
 	while(targetedArcs !=  numberOfArcs(intersect)){
 		gb_recycle(intersect);
-		intersect = intersection(child, Adj(g, i),0,0);
 		i++;
+		intersect = intersection(child, Adj(g, i),0,0);
 	}
-	*/
+	
 	return i;
 }
 
@@ -690,7 +681,7 @@ int main(){
 	makeFlipList(&arr_vert, allFlips, &flippableEcount);
 	//listTuples(allFlips, &flippableEcount);
 	lexicographicOrder(allFlips, flippableEcount);
-	listTuples(allFlips, &flippableEcount);
+	//listTuples(allFlips, &flippableEcount);
 	printf("%d\n", flippableEcount);
 
 	
@@ -705,13 +696,7 @@ int main(){
 	for (int i=1; i<cojavim->n;i++){
 		test0[i] = test0[0] + i;
 	}
-
-	int adjecancyMatrix2[cojavim->n][cojavim->n];
-	initiateMatrix(adjecancyMatrix2);
-	updateArcsInMatrix(adjecancyMatrix2, &test0);
-	printMatrix(adjecancyMatrix2);
-
-	
+		
 	flipQuad test1[100];
 
 	//initiaze to all 0s, was cousing problems, due to some values in memory
@@ -728,14 +713,13 @@ int main(){
 	makeFlipList(&test0, test1, &test2);
 	printf("%d\n", test2);
 	lexicographicOrder(test1, test2);
-	listTuples(test1, &test2);
+	//listTuples(test1, &test2);
 	
 	
 
 	//Graph *kundicka = Adj(triang, 2);
-	//int mrdka = backtrack(triang);
-	//printf("%d\n", mrdka);
-	//printf("%d\n", mrdka);
+	int mrdka = backtrack(triang);
+	printf("%d\n", mrdka);
 
 	//Graph *test = localSearch(triang);
 	//save_graph(test, "new.gb");
