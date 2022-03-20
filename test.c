@@ -147,25 +147,32 @@ int valueInArray(int vertex1, int vertex2, int vertex3, int vertex4, flipQuad al
 
 int edgeInGraph(Vertex *arr_vert[], int vertex3, int vertex4){
 	Arc *a;
-	for(int i = 0; i < sizeof(arr_vert)/sizeof(arr_vert[0]); i++){
+	//printf("[%d,%d]\n", vertex3, vertex4	);
+	for(int i = 0; i < NUMOFVERTICES; i++){
 		for(a = arr_vert[i]->arcs; a; a = a->next){
 			if((atoi(arr_vert[i]->name) == vertex3) && (atoi(a->tip->name) == vertex4)){
+				//printf("(%d, %d)\n", atoi(arr_vert[i]->name), atoi(a->tip->name));
+				return 1;
+			}
+			/*
+			else if((atoi(arr_vert[i]->name) == vertex4) && (atoi(a->tip->name) == vertex3)){
 				printf("(%d, %d)\n", atoi(arr_vert[i]->name), atoi(a->tip->name));
 				return 1;
 			}
+			*/
 		}
 	}
-
+	return 0;
 }
 
 
 //add flippable edge to the array of flippable edges
 void addTuple(int vertex1, int vertex2, int vertex3, int vertex4, Vertex *arr_vert[], flipQuad allFlips[], int *flippableEcount) {
 	
-	
 	if(valueInArray(vertex1, vertex2, vertex3, vertex4, allFlips) || edgeInGraph(arr_vert, vertex3, vertex4)){
 		return;
 	}
+	//printf("%d\n", edgeInGraph(arr_vert, vertex3, vertex4));
 	
 
 	//printf("%d\n", allFlips[*flippableEcount].ver2);
@@ -175,8 +182,6 @@ void addTuple(int vertex1, int vertex2, int vertex3, int vertex4, Vertex *arr_ve
     allFlips[*flippableEcount].edge1.ver2 = vertex2;
     allFlips[*flippableEcount].edge2.ver1 = vertex3;
     allFlips[*flippableEcount].edge2.ver2 = vertex4;    
-    
-   
 
     //printf("flippable edge: %d, %d\n", allFlips[*flippableEcount].ver1, allFlips[*flippableEcount].ver2);
 
