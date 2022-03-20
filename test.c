@@ -433,10 +433,10 @@ Graph* flipOneEdge(Graph *old, flipQuad edgeToFlip, flipQuad allFlips[]){
 			gb_new_arc(new_vert_arr[atoi(v->name)],new_vert_arr[atoi(a->tip->name)]);
 		}
 	}
-	//printf("flipped edge (%d, %d)", edgeToFlip.edge1.ver1, edgeToFlip.edge1.ver2);
+	printf("flipped edge (%d, %d)", edgeToFlip.edge1.ver1, edgeToFlip.edge1.ver2);
 	printf("\n");
 	//flip the specified edges in the new graph
-	//printf("to edge: (%d, %d)\n", edgeToFlip.edge2.ver1, edgeToFlip.edge2.ver2);
+	printf("to edge: (%d, %d)\n", edgeToFlip.edge2.ver1, edgeToFlip.edge2.ver2);
 	gb_new_edge(new_vert_arr[edgeToFlip.edge2.ver1], new_vert_arr[edgeToFlip.edge2.ver2], 1L);
 	//printf("new edge added: %d, %d\n", newEdge.ver1,newEdge.ver2);
 	removeEdgge(edgeToFlip.edge1.ver1, edgeToFlip.edge1.ver2, new_vert_arr);
@@ -534,7 +534,7 @@ Graph* localSearch(Graph *g){
 
 	makeFlipList(&arr_vert, allFlips, &flippableEcount);
 	//lexicographicOrder(allFlips, flippableEcount);
-	Graph *adjRetrunGraph = flipOneEdge(g, allFlips[flippableEcount-1], allFlips);
+	Graph *adjRetrunGraph = flipOneEdge(g, allFlips[0], allFlips);
 	return adjRetrunGraph;
 }
 
@@ -542,8 +542,11 @@ Graph* localSearch(Graph *g){
 int reverse (Graph *g, int i){
 	//printf("reverse(some graph, %d)\n", i);
 	Graph *w = Adj(g, i);
+	flippableListOfGraph(w);
 	int targetedArcs = numberOfArcs(g);
-	Graph *intersect = intersection(g, localSearch(w),0,0);
+	Graph *ls = localSearch(w);
+	flippableListOfGraph(ls);
+	Graph *intersect = intersection(g, ls,0,0);
 
 	//w != NULL)
 	if(targetedArcs==numberOfArcs(intersect)){
@@ -710,11 +713,12 @@ int main(){
 	listTuples(allFlips, &flippableEcount);
 	printf("%d\n", flippableEcount);
 
+	/*
 	Graph *w = Adj(triang, 10);
 	Graph *target = localSearch(w);
 
 	flippableListOfGraph(w);
-
+	*/
 	
 	printf("reverse ==========================================\n");
 
@@ -732,8 +736,8 @@ int main(){
 		}
 	}
 	*/
-	//int testReverse = reverse(triang, 27);
-	//printf("%d\n", testReverse);
+	int testReverse = reverse(triang, 10);
+	printf("%d\n", testReverse);
 
 	//int idk = reversesearch(triang, flippableEcount);
 }
