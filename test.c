@@ -145,12 +145,25 @@ int valueInArray(int vertex1, int vertex2, int vertex3, int vertex4, flipQuad al
     return 0;
 }
 
+int edgeInGraph(Vertex *arr_vert[], int vertex3, int vertex4){
+	Arc *a;
+	for(int i = 0; i < sizeof(arr_vert)/sizeof(arr_vert[0]); i++){
+		for(a = arr_vert[i]->arcs; a; a = a->next){
+			if((atoi(arr_vert[i]->name) == vertex3) && (atoi(a->tip->name) == vertex4)){
+				printf("(%d, %d)\n", atoi(arr_vert[i]->name), atoi(a->tip->name));
+				return 1;
+			}
+		}
+	}
+
+}
+
 
 //add flippable edge to the array of flippable edges
 void addTuple(int vertex1, int vertex2, int vertex3, int vertex4, Vertex *arr_vert[], flipQuad allFlips[], int *flippableEcount) {
 	
 	
-	if(valueInArray(vertex1, vertex2, vertex3, vertex4, allFlips)){
+	if(valueInArray(vertex1, vertex2, vertex3, vertex4, allFlips) || edgeInGraph(arr_vert, vertex3, vertex4)){
 		return;
 	}
 	
@@ -183,21 +196,38 @@ void listTuples(flipQuad allFlips[], int *flippableEcount) {
 void removeEdgge(int vertex1, int vertex2, Vertex *arr_vert[]){
 	Arc *a;
 	Arc *prev;
+	//used to remove first node of the arcs linked list
+	int nodeOrder;
+
 	for(int i = 0; i < NUMOFVERTICES; i++){
 		prev = arr_vert[i]->arcs;
+		nodeOrder = 0;
 		for(a = arr_vert[i]->arcs; a; a = a->next){
 			//printf("previous: %s\n",prev->tip->name);
 			if((vertex1 == atoi(arr_vert[i]->name)) && (vertex2 == atoi(a->tip->name))){
 				printf("removed arc (%s, %s), %d\n", arr_vert[i]->name, a->tip->name, i);
-				prev->next = a->next;
+				if(nodeOrder == 0){
+					arr_vert[i]->arcs = a->next;
+					continue;
+				}
+				else {
+					prev->next = a->next;
+				}
 				//free(a);
 			}
 			else if((vertex2 == atoi(arr_vert[i]->name)) && (vertex1 == atoi(a->tip->name))){
 				//remove arc from the linked list
 				printf("removed arc (%s, %s), %d\n", arr_vert[i]->name, a->tip->name, i);
-				prev->next = a->next;
+				if(nodeOrder == 0){
+					arr_vert[i]->arcs = a->next;
+					continue;
+				}
+				else {
+					prev->next = a->next;
+				}
 				//free(a);
 			}
+			nodeOrder++;
 			prev = a;
 		}
 	}
@@ -474,7 +504,7 @@ Graph* localSearch(Graph *g){
 
 	makeFlipList(&arr_vert, allFlips, &flippableEcount);
 	lexicographicOrder(allFlips, flippableEcount);
-	Graph *adjRetrunGraph = flipOneEdge(g, allFlips[0], allFlips);
+	Graph *adjRetrunGraph = flipOneEdge(g, allFlips[18], allFlips);
 	return adjRetrunGraph;
 }
 
@@ -655,25 +685,10 @@ int main(){
 	makeFlipList(&arr_vert, allFlips, &flippableEcount);
 	//listTuples(allFlips, &flippableEcount);
 	lexicographicOrder(allFlips, flippableEcount);
-	//listTuples(allFlips, &flippableEcount);
+	listTuples(allFlips, &flippableEcount);
+	printf("%d\n", flippableEcount);
 
-	int adjecancyMatrix[NUMOFVERTICES][NUMOFVERTICES];
-	initiateMatrix(adjecancyMatrix);
-	updateArcsInMatrix(adjecancyMatrix, &arr_vert);
-	printMatrix(adjecancyMatrix);
-	printf("\n");
-	listEdgesOfGraph(triang);
-
-	removeEdgge(0,3, arr_vert);
-
-	int testMatrix[NUMOFVERTICES][NUMOFVERTICES];
-	initiateMatrix(testMatrix);
-	updateArcsInMatrix(testMatrix, &arr_vert);
-	printMatrix(testMatrix);
-	listEdgesOfGraph(triang);
-
-	//printf("%d\n", flippableEcount);
-	/*
+	
 	printf("reverse ==========================================\n");
 
 	Graph *cojavim = localSearch(triang);
@@ -709,7 +724,7 @@ int main(){
 	printf("%d\n", test2);
 	lexicographicOrder(test1, test2);
 	listTuples(test1, &test2);
-	*/
+	
 	
 
 	//Graph *kundicka = Adj(triang, 2);
