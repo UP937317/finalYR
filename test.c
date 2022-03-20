@@ -553,7 +553,7 @@ Iam looking fo i such that
 g = Adj(w,i)
 */
 int backtrack(Graph *g){
-	//printf("backtrack(some graph)\n");
+	printf("backtrack(some graph)\n");
 	int i = 0;
 	Graph *child = g;
 	int targetedArcs = numberOfArcs(child);
@@ -571,7 +571,7 @@ int backtrack(Graph *g){
 }
 
 int root(Graph *g){
-	//printf("root(some graph)\n");
+	printf("root(some graph)\n");
 	
 	if(!strcmp(g->id, "start")){
 		return 1;
@@ -673,49 +673,19 @@ int main(){
 	//print result of the operation to the nth power
 	printMatrix(result);
 
-
 	*/
-
 
 	//TESTING LEXICOGRAPHICALL ORDER SORTING
 	makeFlipList(&arr_vert, allFlips, &flippableEcount);
 	//listTuples(allFlips, &flippableEcount);
 	lexicographicOrder(allFlips, flippableEcount);
 	//listTuples(allFlips, &flippableEcount);
-	printf("%d\n", flippableEcount);
+	//printf("%d\n", flippableEcount);
 
 	
 	printf("reverse ==========================================\n");
 
-	Graph *cojavim = localSearch(triang);
-
-	Vertex *test0[cojavim->n];
-
-	test0[0] = cojavim->vertices;
-
-	for (int i=1; i<cojavim->n;i++){
-		test0[i] = test0[0] + i;
-	}
-		
-	flipQuad test1[100];
-
-	//initiaze to all 0s, was cousing problems, due to some values in memory
-	for (int i=1; i<sizeof(test1)/sizeof(test1[0]); i++){
-		test1[i].edge1.ver1 = 0;
-		test1[i].edge1.ver2 = 0;
-		test1[i].edge2.ver1 = 0;
-		test1[i].edge2.ver2 = 0;
-	}
-
-	int test2 = 0;
-
-
-	makeFlipList(&test0, test1, &test2);
-	printf("%d\n", test2);
-	lexicographicOrder(test1, test2);
 	//listTuples(test1, &test2);
-	
-	
 
 	//Graph *kundicka = Adj(triang, 2);
 	int mrdka = backtrack(triang);
