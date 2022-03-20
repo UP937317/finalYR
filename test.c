@@ -50,6 +50,17 @@ void printTESTmatrix(const int** mat[NUMOFVERTICES][NUMOFVERTICES]){
 	}
 }*/
 
+void listEdgesOfGraph(Graph *g){
+	Vertex *v;
+	Arc *a;
+
+	for(v = g->vertices; v < g->vertices + g->n; v++){
+		for(a = v->arcs; a; a = a->next){
+			printf("(%s,%s);", v->name, a->tip->name);
+		}
+	}
+}
+
 //initiaze adjecancy matrix to all 0s
 void initiateMatrix(int mat1[NUMOFVERTICES][NUMOFVERTICES]){
 	for(int k = 0; k < NUMOFVERTICES; k++){
@@ -651,6 +662,7 @@ int main(){
 	updateArcsInMatrix(adjecancyMatrix, &arr_vert);
 	printMatrix(adjecancyMatrix);
 	printf("\n");
+	listEdgesOfGraph(triang);
 
 	removeEdgge(0,3, arr_vert);
 
@@ -658,6 +670,7 @@ int main(){
 	initiateMatrix(testMatrix);
 	updateArcsInMatrix(testMatrix, &arr_vert);
 	printMatrix(testMatrix);
+	listEdgesOfGraph(triang);
 
 	//printf("%d\n", flippableEcount);
 	/*
