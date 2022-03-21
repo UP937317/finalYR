@@ -86,6 +86,7 @@ void flippableListOfGraph(Graph *g){
 	makeFlipList(&testVertice, testAllFlips, &testFlippableEcount);
 	lexicographicOrder(testAllFlips, testFlippableEcount);
 	listTuples(testAllFlips, &testFlippableEcount);
+	printf("%d\n", testFlippableEcount);
 }
 
 //initiaze adjecancy matrix to all 0s
@@ -556,7 +557,7 @@ Graph* localSearch(Graph *g){
 
 	makeFlipList(&arr_vert, allFlips, &flippableEcount);
 	lexicographicOrder(allFlips, flippableEcount);
-	Graph *adjRetrunGraph = flipOneEdge(g, allFlips[0], allFlips);
+	Graph *adjRetrunGraph = flipOneEdge(g, allFlips[firstSmallestToBiggest(allFlips,flippableEcount)], allFlips);
 	return adjRetrunGraph;
 }
 
@@ -762,8 +763,13 @@ int main(){
 
 	Graph *debilina = Adj(triang, 10);
 	flippableListOfGraph(debilina);
-	int testReverse = reverse(debilina, 10);
-	printf("%d\n", testReverse);
+
+	
+	for(int i = 0; i < 30;i++){
+		int testReverse = reverse(debilina, i);
+		printf("%d\n", testReverse);
+	}
+	
 
 	//int idk = reversesearch(triang, 28);
 
