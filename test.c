@@ -433,10 +433,10 @@ Graph* flipOneEdge(Graph *old, flipQuad edgeToFlip, flipQuad allFlips[]){
 			gb_new_arc(new_vert_arr[atoi(v->name)],new_vert_arr[atoi(a->tip->name)]);
 		}
 	}
-	printf("flipped edge (%d, %d)", edgeToFlip.edge1.ver1, edgeToFlip.edge1.ver2);
+	//printf("flipped edge (%d, %d)", edgeToFlip.edge1.ver1, edgeToFlip.edge1.ver2);
 	printf("\n");
 	//flip the specified edges in the new graph
-	printf("to edge: (%d, %d)\n", edgeToFlip.edge2.ver1, edgeToFlip.edge2.ver2);
+	//printf("to edge: (%d, %d)\n", edgeToFlip.edge2.ver1, edgeToFlip.edge2.ver2);
 	gb_new_edge(new_vert_arr[edgeToFlip.edge2.ver1], new_vert_arr[edgeToFlip.edge2.ver2], 1L);
 	//printf("new edge added: %d, %d\n", newEdge.ver1,newEdge.ver2);
 	removeEdgge(edgeToFlip.edge1.ver1, edgeToFlip.edge1.ver2, new_vert_arr);
@@ -533,7 +533,7 @@ Graph* localSearch(Graph *g){
 	}
 
 	makeFlipList(&arr_vert, allFlips, &flippableEcount);
-	//lexicographicOrder(allFlips, flippableEcount);
+	lexicographicOrder(allFlips, flippableEcount);
 	Graph *adjRetrunGraph = flipOneEdge(g, allFlips[0], allFlips);
 	return adjRetrunGraph;
 }
@@ -542,10 +542,10 @@ Graph* localSearch(Graph *g){
 int reverse (Graph *g, int i){
 	//printf("reverse(some graph, %d)\n", i);
 	Graph *w = Adj(g, i);
-	flippableListOfGraph(w);
+	//flippableListOfGraph(w);
 	int targetedArcs = numberOfArcs(g);
 	Graph *ls = localSearch(w);
-	flippableListOfGraph(ls);
+	//flippableListOfGraph(ls);
 	Graph *intersect = intersection(g, ls,0,0);
 
 	//w != NULL)
@@ -584,7 +584,7 @@ Iam looking fo i such that
 g = Adj(w,i)
 */
 int backtrack(Graph *g){
-	printf("backtrack(some graph)\n");
+	//printf("backtrack(some graph)\n");
 	int i = 0;
 	Graph *child = g;
 	int targetedArcs = numberOfArcs(child);
@@ -602,7 +602,7 @@ int backtrack(Graph *g){
 }
 
 int root(Graph *g){
-	printf("root(some graph)\n");
+	//printf("root(some graph)\n");
 	
 	if(!strcmp(g->id, "start")){
 		return 1;
@@ -625,7 +625,7 @@ int reversesearch(Graph *g, int maxdeg){
 	while (!root(g) || i < maxdeg){
 		do{
 			i++;
-			printf("depth: %d\n", i);
+			//printf("depth: %d\n", i);
 		}while (i <= maxdeg && !reverse(g, i));
 		if (i <= maxdeg){
 
@@ -736,8 +736,8 @@ int main(){
 		}
 	}
 	*/
-	int testReverse = reverse(triang, 10);
-	printf("%d\n", testReverse);
+	//int testReverse = reverse(triang, 10);
+	//printf("%d\n", testReverse);
 
-	//int idk = reversesearch(triang, flippableEcount);
+	//int idk = reversesearch(triang, 28);
 }
