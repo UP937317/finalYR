@@ -433,10 +433,10 @@ Graph* flipOneEdge(Graph *old, flipQuad edgeToFlip, flipQuad allFlips[]){
 			gb_new_arc(new_vert_arr[atoi(v->name)],new_vert_arr[atoi(a->tip->name)]);
 		}
 	}
-	//printf("flipped edge (%d, %d)", edgeToFlip.edge1.ver1, edgeToFlip.edge1.ver2);
+	printf("flipped edge (%d, %d)", edgeToFlip.edge1.ver1, edgeToFlip.edge1.ver2);
 	printf("\n");
 	//flip the specified edges in the new graph
-	//printf("to edge: (%d, %d)\n", edgeToFlip.edge2.ver1, edgeToFlip.edge2.ver2);
+	printf("to edge: (%d, %d)\n", edgeToFlip.edge2.ver1, edgeToFlip.edge2.ver2);
 	gb_new_edge(new_vert_arr[edgeToFlip.edge2.ver1], new_vert_arr[edgeToFlip.edge2.ver2], 1L);
 	//printf("new edge added: %d, %d\n", newEdge.ver1,newEdge.ver2);
 	removeEdgge(edgeToFlip.edge1.ver1, edgeToFlip.edge1.ver2, new_vert_arr);
@@ -510,6 +510,28 @@ void lexicographicOrder(flipQuad allFlips[], int flippableEcount){
 	qsort(allFlips,flippableEcount, sizeof(flipQuad), comparer);
 }
 
+//if edge is suitable for flip(edge1 is lexicographically smaller then edge2)
+int suitableForFlip(flippableEdge edge1, flippableEdge edge2){
+	if(edge1.ver1 < edge2.ver1){
+		return 1;
+	}
+	else if((edge1.ver1 == edge2.ver1) && (edge1.ver2 < edge2.ver2)){
+		return 1;
+	}
+	else{
+		return 0;
+	}
+}
+
+//take the first smallest edge that can be flipped to bigger
+int firstSmallestToBiggest(flipQuad allFlips[], int flippableEcount){
+	for(int i = 0; i< flippableEcount; i++){
+		if(suitableForFlip(allFlips[i].edge1, allFlips[i].edge2)){
+			return i;
+		}
+	}
+}
+
 Graph* localSearch(Graph *g){
 	//printf("localsearch(some graph)\n");
 	int n = g->n;
@@ -540,12 +562,12 @@ Graph* localSearch(Graph *g){
 
 //if if neighbour w of g is child of g in reverse search tree
 int reverse (Graph *g, int i){
-	//printf("reverse(some graph, %d)\n", i);
+	printf("reverse(some graph, %d)\n", i);
 	Graph *w = Adj(g, i);
-	//flippableListOfGraph(w);
+	flippableListOfGraph(w);
 	int targetedArcs = numberOfArcs(g);
 	Graph *ls = localSearch(w);
-	//flippableListOfGraph(ls);
+	flippableListOfGraph(ls);
 	Graph *intersect = intersection(g, ls,0,0);
 
 	//w != NULL)
@@ -710,7 +732,7 @@ int main(){
 	makeFlipList(&arr_vert, allFlips, &flippableEcount);
 	//listTuples(allFlips, &flippableEcount);
 	lexicographicOrder(allFlips, flippableEcount);
-	listTuples(allFlips, &flippableEcount);
+	//listTuples(allFlips, &flippableEcount);
 	printf("%d\n", flippableEcount);
 
 	/*
@@ -736,8 +758,13 @@ int main(){
 		}
 	}
 	*/
-	//int testReverse = reverse(triang, 10);
-	//printf("%d\n", testReverse);
+
+
+	Graph *debilina = Adj(triang, 10);
+	flippableListOfGraph(debilina);
+	int testReverse = reverse(debilina, 10);
+	printf("%d\n", testReverse);
 
 	//int idk = reversesearch(triang, 28);
+
 }
