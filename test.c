@@ -85,7 +85,7 @@ void flippableListOfGraph(Graph *g){
 
 	makeFlipList(&testVertice, testAllFlips, &testFlippableEcount);
 	lexicographicOrder(testAllFlips, testFlippableEcount);
-	listTuples(testAllFlips, &testFlippableEcount);
+	//listTuples(testAllFlips, &testFlippableEcount);
 	printf("%d\n", testFlippableEcount);
 }
 
@@ -513,10 +513,10 @@ void lexicographicOrder(flipQuad allFlips[], int flippableEcount){
 
 //if edge is suitable for flip(edge1 is lexicographically smaller then edge2)
 int suitableForFlip(flippableEdge edge1, flippableEdge edge2){
-	if(edge1.ver1 < edge2.ver1){
+	if(edge1.ver1 > edge2.ver1){
 		return 1;
 	}
-	else if((edge1.ver1 == edge2.ver1) && (edge1.ver2 < edge2.ver2)){
+	else if((edge1.ver1 == edge2.ver1) && (edge1.ver2 > edge2.ver2)){
 		return 1;
 	}
 	else{
@@ -565,10 +565,10 @@ Graph* localSearch(Graph *g){
 int reverse (Graph *g, int i){
 	printf("reverse(some graph, %d)\n", i);
 	Graph *w = Adj(g, i);
-	flippableListOfGraph(w);
+	//flippableListOfGraph(w);
 	int targetedArcs = numberOfArcs(g);
 	Graph *ls = localSearch(w);
-	flippableListOfGraph(ls);
+	//flippableListOfGraph(ls);
 	Graph *intersect = intersection(g, ls,0,0);
 
 	//w != NULL)
@@ -627,12 +627,13 @@ int backtrack(Graph *g){
 int root(Graph *g){
 	//printf("root(some graph)\n");
 	
-	if(!strcmp(g->id, "start")){
+	if(!strcmp(g->id, "root")){
 		return 1;
 	}
 	else{
 		return 0;
 	}
+	
 }
 
 void output(Graph *g){
@@ -648,13 +649,10 @@ int reversesearch(Graph *g, int maxdeg){
 	while (!root(g) || i < maxdeg){
 		do{
 			i++;
-			//printf("depth: %d\n", i);
 		}while (i <= maxdeg && !reverse(g, i));
 		if (i <= maxdeg){
 
-			printf("kundovina\n");
 			g = Adj(g, i);
-			//printf("%s\n", g->id);
 			output(g);
 			count++;
 			i = 0;
@@ -674,8 +672,7 @@ int main(){
 	Graph *triang = restore_graph("triang.gb");
 
 	//set ID od the loaded graph for root() function
-	char rootID[] =  "start";
-	strcpy(triang->id, rootID);
+	
 	//printf("%s\n", triang->id);
 
 	arr_vert[0] = triang->vertices;
@@ -752,25 +749,31 @@ int main(){
 	//printf("%d\n", mrdka);
 
 	/*
-	for(int i = 0; i <100;i++){
-		if(reverse(triang, i)){
-			printf("MRDKA\n");
-			break;
-		}
-	}
+	flippableListOfGraph(triang);
+	//Graph *debilina = Adj(triang, 10);
+	Graph *debilina = localSearch(triang)
+;	flippableListOfGraph(debilina);
 	*/
 
-
-	Graph *debilina = Adj(triang, 10);
-	flippableListOfGraph(debilina);
+	Graph *w = localSearch(triang);
+	for(int i = 0; i < 9; i++){
+		w = localSearch(w);
+		flippableListOfGraph(w);
+	}
+	//flippableListOfGraph(w);
+	
+	char rootID[] =  "root";
+	strcpy(w->id, rootID);
 
 	
-	for(int i = 0; i < 30;i++){
-		int testReverse = reverse(debilina, i);
+	for(int i = 0; i < 35;i++){
+		int testReverse = reverse(w, i);
 		printf("%d\n", testReverse);
+		
 	}
 	
+	
 
-	//int idk = reversesearch(triang, 28);
+	//int idk = reversesearch(w, 50);
 
 }
