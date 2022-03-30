@@ -434,10 +434,10 @@ Graph* flipOneEdge(Graph *old, flipQuad edgeToFlip, flipQuad allFlips[]){
 			gb_new_arc(new_vert_arr[atoi(v->name)],new_vert_arr[atoi(a->tip->name)]);
 		}
 	}
-	printf("flipped edge (%d, %d)", edgeToFlip.edge1.ver1, edgeToFlip.edge1.ver2);
+	//printf("flipped edge (%d, %d)", edgeToFlip.edge1.ver1, edgeToFlip.edge1.ver2);
 	printf("\n");
 	//flip the specified edges in the new graph
-	printf("to edge: (%d, %d)\n", edgeToFlip.edge2.ver1, edgeToFlip.edge2.ver2);
+	//printf("to edge: (%d, %d)\n", edgeToFlip.edge2.ver1, edgeToFlip.edge2.ver2);
 	gb_new_edge(new_vert_arr[edgeToFlip.edge2.ver1], new_vert_arr[edgeToFlip.edge2.ver2], 1L);
 	//printf("new edge added: %d, %d\n", newEdge.ver1,newEdge.ver2);
 	removeEdgge(edgeToFlip.edge1.ver1, edgeToFlip.edge1.ver2, new_vert_arr);
@@ -563,7 +563,7 @@ Graph* localSearch(Graph *g){
 
 //if if neighbour w of g is child of g in reverse search tree
 int reverse (Graph *g, int i){
-	printf("reverse(some graph, %d)\n", i);
+	//printf("reverse(some graph, %d)\n", i);
 	Graph *w = Adj(g, i);
 	//flippableListOfGraph(w);
 	int targetedArcs = numberOfArcs(g);
@@ -607,7 +607,7 @@ Iam looking fo i such that
 g = Adj(w,i)
 */
 int backtrack(Graph *g){
-	//printf("backtrack(some graph)\n");
+	printf("backtrack(some graph)\n");
 	int i = 0;
 	Graph *child = g;
 	int targetedArcs = numberOfArcs(child);
@@ -620,7 +620,6 @@ int backtrack(Graph *g){
 		i++;
 		intersect = intersection(child, Adj(g, i),0,0);
 	}
-	
 	return i;
 }
 
@@ -645,7 +644,7 @@ void output(Graph *g){
 int reversesearch(Graph *g, int maxdeg){
 	int i=0, count=1;
 	output(g);
-	//printf("%d\n", maxdeg);
+	
 	while (!root(g) || i < maxdeg){
 		do{
 			i++;
@@ -657,9 +656,9 @@ int reversesearch(Graph *g, int maxdeg){
 			count++;
 			i = 0;
 		}
-		else{
+		else
 			i = backtrack(g);
-		}
+			g = localSearch(g);
 	}
 	return count;
 }
@@ -765,15 +764,16 @@ int main(){
 	char rootID[] =  "root";
 	strcpy(w->id, rootID);
 
-	
+	/*
 	for(int i = 0; i < 35;i++){
 		int testReverse = reverse(w, i);
 		printf("%d\n", testReverse);
 		
 	}
+	*/
 	
 	
 
-	//int idk = reversesearch(w, 50);
+	int idk = reversesearch(w, 50);
 
 }
