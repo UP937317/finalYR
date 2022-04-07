@@ -85,7 +85,7 @@ void flippableListOfGraph(Graph *g){
 
 	makeFlipList(&testVertice, testAllFlips, &testFlippableEcount);
 	lexicographicOrder(testAllFlips, testFlippableEcount);
-	//listTuples(testAllFlips, &testFlippableEcount);
+	listTuples(testAllFlips, &testFlippableEcount);
 	printf("%d\n", testFlippableEcount);
 }
 
@@ -654,6 +654,7 @@ int reversesearch(Graph *g, int maxdeg){
 			g = Adj(g, i);
 			output(g);
 			count++;
+			printf("%d\n", count);
 			i = 0;
 		}
 		else
@@ -729,7 +730,7 @@ int main(){
 	makeFlipList(&arr_vert, allFlips, &flippableEcount);
 	//listTuples(allFlips, &flippableEcount);
 	lexicographicOrder(allFlips, flippableEcount);
-	//listTuples(allFlips, &flippableEcount);
+	listTuples(allFlips, &flippableEcount);
 	printf("%d\n", flippableEcount);
 
 	/*
@@ -757,7 +758,7 @@ int main(){
 	Graph *w = localSearch(triang);
 	for(int i = 0; i < 9; i++){
 		w = localSearch(w);
-		flippableListOfGraph(w);
+		//flippableListOfGraph(w);
 	}
 	//flippableListOfGraph(w);
 	
@@ -774,6 +775,93 @@ int main(){
 	
 	
 
-	int idk = reversesearch(w, 50);
+	//int idk = reversesearch(w, 50);
+
+	printf("test ==========================================\n");
+
+	//TEST SECTON SKIP
+
+	Graph *v = restore_graph("v.gb");
+
+	// neighbours 0, 1 and 4 are in reverse search tree
+
+	//Graph *first = Adj(v, 0);
+	// no neighbours in RS tree
+
+
+	//Graph *first = Adj(v, 1);
+	// neighbours 0, 1 and 4 are in reverse search tree
+
+	//Graph *second = Adj(Adj(v, 1), 0);
+	// neighbours 1, 5, 12 and 16 are in reverse search tree
+	//Graph *third = Adj(Adj(Adj(v, 1), 0), 1);
+	//6,10
+	//Graph *third = Adj(Adj(Adj(v, 1), 0), 5);
+	//7
+	//Graph *third = Adj(Adj(Adj(v, 1), 0), 12);
+	//11
+	//Graph *third = Adj(Adj(Adj(v, 1), 0), 16);
+	//15,16
+
+
+	//Graph *second = Adj(Adj(v, 1), 1);
+	//neighbours 3, 4, 9 and 13 are in reverse search tree
+	//Graph *third = Adj(Adj(Adj(v, 1), 1), 3);
+	//7
+	//Graph *third = Adj(Adj(Adj(v, 1), 1), 4);
+	//-
+	//Graph *third = Adj(Adj(Adj(v, 1), 1), 9);
+	//1
+	//Graph *third = Adj(Adj(Adj(v, 1), 1), 13);
+	//11,12
+
+
+	//Graph *second = Adj(Adj(v, 1), 4);
+	//neighbour 8 is in reverse search tree
+	//Graph *third = Adj(Adj(Adj(v, 1), 4), 8);
+	//-
+
+
+
+
+
+
+	//Graph *first = Adj(v, 4);
+	//neighbours 0, 1 and 5 are in reverse search tree
+
+	//Graph *second = Adj(Adj(v, 4), 0);
+	// neighbour 7 is in reverse search tree
+	//Graph *third = Adj(Adj(Adj(v, 4), 0), 7);
+	//3,4
+
+
+	//Graph *second = Adj(Adj(v, 4), 1);
+	// neighbours 2 and 13 are in reverse search tree
+	//Graph *third = Adj(Adj(Adj(v, 4), 1), 2);
+	//11
+	//Graph *third = Adj(Adj(Adj(v, 4), 1), 13);
+	//7,8
+
+
+	//Graph *second = Adj(Adj(v, 4), 5);
+	// neighbours 0 and 1 are in reverse search tree
+	//Graph *third = Adj(Adj(Adj(v, 4), 5), 0);
+	//-
+	//Graph *third = Adj(Adj(Adj(v, 4), 5), 1);
+	//5
+
+
+
+
+
+	for(int i = 0; i < 26;i++){
+		int testReverse = reverse(third, i);
+		if(testReverse){
+			printf("%d\n", i);
+		}
+		
+	}
+
+	//int idk = reversesearch(seventh, 25);
 
 }
