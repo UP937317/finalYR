@@ -67,7 +67,7 @@ void flippableListOfGraph(Graph *g){
 
 	testVertice[0] = g->vertices;
 
-	for (int i=1; i<NUMOFVERTICES;i++){
+	for (int i=1; i<g->n;i++){
 		testVertice[i] = testVertice[0] + i;
 	}
 
@@ -176,7 +176,7 @@ int valueInArray(int vertex1, int vertex2, int vertex3, int vertex4, flipQuad al
 int edgeInGraph(Vertex *arr_vert[], int vertex3, int vertex4){
 	Arc *a;
 	//printf("[%d,%d]\n", vertex3, vertex4	);
-	for(int i = 0; i < NUMOFVERTICES; i++){
+	for(int i = 0; i < sizeof(arr_vert)/sizeof(arr_vert[0]); i++){
 		for(a = arr_vert[i]->arcs; a; a = a->next){
 			if((atoi(arr_vert[i]->name) == vertex3) && (atoi(a->tip->name) == vertex4)){
 				//printf("(%d, %d)\n", atoi(arr_vert[i]->name), atoi(a->tip->name));
@@ -669,7 +669,7 @@ int main(){
 	Vertex *arr_vert[NUMOFVERTICES];
 
 	//Constructing triangulated graph, 9-critical, reference 12.57.1 from Boutin paper
-	Graph *triang = restore_graph("triang.gb");
+	Graph *triang = restore_graph("triangLayer2.gb");
 
 	//set ID od the loaded graph for root() function
 	
@@ -781,7 +781,14 @@ int main(){
 
 	//TEST SECTON SKIP
 
-	Graph *v = restore_graph("v.gb");
+
+	//12 UPPER LAYER
+
+	//Graph *v = restore_graph("v.gb");
+
+	//strcpy(v->id, rootID);
+
+	//flippableListOfGraph(v);
 
 	// neighbours 0, 1 and 4 are in reverse search tree
 
@@ -822,10 +829,6 @@ int main(){
 	//-
 
 
-
-
-
-
 	//Graph *first = Adj(v, 4);
 	//neighbours 0, 1 and 5 are in reverse search tree
 
@@ -850,18 +853,64 @@ int main(){
 	//Graph *third = Adj(Adj(Adj(v, 4), 5), 1);
 	//5
 
+	//12 UPPER LAYER END
 
 
+	//12 LOWER LAYER
+
+	//Graph *v2 = restore_graph("v2.gb");
+	//strcpy(v2->id, rootID);
+
+	//flippableListOfGraph(v2);
+
+	// neighbours 3, 4 and 19 are in reverse search tree
+
+	
+
+	//Graph *first = Adj(v2, 3);
+	// neighbour 5 is in the reverse search tree
+
+	//Graph *second = Adj(Adj(v2, 3),5);
+	//-
 
 
+	//Graph *first = Adj(v2, 4);
+	// - 
+
+
+	//Graph *first = Adj(v2, 19);
+	//neighbouts 3 and 4 are in the reverse search tree
+
+	//Graph *second = Adj(Adj(v2, 19), 3);
+	//-
+	//Graph *second = Adj(Adj(v2, 19), 4);
+	//-
+
+
+	//12 LOWER LAYER END
+
+	//13 UPPER LAYER
+
+	Graph *v16 = restore_graph("v_16.gb");
+	strcpy(v16->id, rootID);
+
+	flippableListOfGraph(v16);
+	//13 UPPER LAYER END
+
+
+	/*
 	for(int i = 0; i < 26;i++){
-		int testReverse = reverse(third, i);
+		int testReverse = reverse(v16, i);
 		if(testReverse){
 			printf("%d\n", i);
 		}
 		
 	}
+	*/
 
-	//int idk = reversesearch(seventh, 25);
+	//int idk = reversesearch(v2, 34);
+
+	//25
+	//34
 
 }
