@@ -83,7 +83,7 @@ void flippableListOfGraph(Graph *g){
 
 	int testFlippableEcount = 0;
 
-	makeFlipList(&testVertice, testAllFlips, &testFlippableEcount);
+	makeFlipList(&testVertice, g->n ,testAllFlips, &testFlippableEcount);
 	lexicographicOrder(testAllFlips, testFlippableEcount);
 	listTuples(testAllFlips, &testFlippableEcount);
 	printf("%d\n", testFlippableEcount);
@@ -173,10 +173,10 @@ int valueInArray(int vertex1, int vertex2, int vertex3, int vertex4, flipQuad al
     return 0;
 }
 
-int edgeInGraph(Vertex *arr_vert[], int vertex3, int vertex4){
+int edgeInGraph(Vertex *arr_vert[], int size ,int vertex3, int vertex4){
 	Arc *a;
 	//printf("[%d,%d]\n", vertex3, vertex4	);
-	for(int i = 0; i < sizeof(arr_vert)/sizeof(arr_vert[0]); i++){
+	for(int i = 0; i < size; i++){
 		for(a = arr_vert[i]->arcs; a; a = a->next){
 			if((atoi(arr_vert[i]->name) == vertex3) && (atoi(a->tip->name) == vertex4)){
 				//printf("(%d, %d)\n", atoi(arr_vert[i]->name), atoi(a->tip->name));
@@ -195,9 +195,9 @@ int edgeInGraph(Vertex *arr_vert[], int vertex3, int vertex4){
 
 
 //add flippable edge to the array of flippable edges
-void addTuple(int vertex1, int vertex2, int vertex3, int vertex4, Vertex *arr_vert[], flipQuad allFlips[], int *flippableEcount) {
+void addTuple(int vertex1, int vertex2, int vertex3, int vertex4, Vertex *arr_vert[], int size, flipQuad allFlips[], int *flippableEcount) {
 	
-	if(valueInArray(vertex1, vertex2, vertex3, vertex4, allFlips) || edgeInGraph(arr_vert, vertex3, vertex4)){
+	if(valueInArray(vertex1, vertex2, vertex3, vertex4, allFlips) || edgeInGraph(arr_vert, size ,vertex3, vertex4)){
 		return;
 	}
 	//printf("%d\n", edgeInGraph(arr_vert, vertex3, vertex4));
@@ -221,18 +221,18 @@ void addTuple(int vertex1, int vertex2, int vertex3, int vertex4, Vertex *arr_ve
 //list all flippable edges
 void listTuples(flipQuad allFlips[], int *flippableEcount) {
     for (int i = 0; i < *flippableEcount; ++i)
-        printf("flippable edge: (%d,%d) to (%d,%d)\n", allFlips[i].edge1.ver1, allFlips[i].edge1.ver2,allFlips[i].edge2.ver1, allFlips[i].edge2.ver2);
+        printf("%d ,flippable edge: (%d,%d) to (%d,%d)\n", i,allFlips[i].edge1.ver1, allFlips[i].edge1.ver2,allFlips[i].edge2.ver1, allFlips[i].edge2.ver2);
     puts("==========");
 }
 
 //remove edge ver1 -> ver2 from current graph, vertices referenced by their name
-void removeEdgge(int vertex1, int vertex2, Vertex *arr_vert[]){
+void removeEdgge(int vertex1, int vertex2, Vertex *arr_vert[], int size){
 	Arc *a;
 	Arc *prev;
 	//used to remove first node of the arcs linked list
 	int nodeOrder;
 
-	for(int i = 0; i < NUMOFVERTICES; i++){
+	for(int i = 0; i < size; i++){
 		prev = arr_vert[i]->arcs;
 		nodeOrder = 0;
 		for(a = arr_vert[i]->arcs; a; a = a->next){
@@ -324,7 +324,7 @@ void flipPossible(Vertex *v1, Vertex *v2,Vertex *v3, Vertex *v4, flipQuad allFli
 	}
 }
 
-void makeFlipList(Vertex *arr_vert[], flipQuad allFlips[], int *flippableEcount){
+void makeFlipList(Vertex *arr_vert[], int size, flipQuad allFlips[], int *flippableEcount){
 	//helper arc and vertex
 	Vertex *v;
 	Arc *a;
@@ -338,12 +338,12 @@ void makeFlipList(Vertex *arr_vert[], flipQuad allFlips[], int *flippableEcount)
 	j -> k
 	*/
 
-	for(int i = 0; i<NUMOFVERTICES ; i++){
-		for(int j = 0; j<NUMOFVERTICES ; j++){
+	for(int i = 0; i<size ; i++){
+		for(int j = 0; j<size ; j++){
 			if(i == j){continue;}
-			for(int k = 0; k<NUMOFVERTICES ; k++){
+			for(int k = 0; k<size ; k++){
 				if(k == i || k == j){continue;}
-				for(int l = 0; l<NUMOFVERTICES ; l++){
+				for(int l = 0; l<size ; l++){
 					if(l == i || l == j || l == k){continue;}
 					//printf("debug 1\n");
 					for(a = arr_vert[i]->arcs; a; a = a->next){
@@ -370,7 +370,7 @@ void makeFlipList(Vertex *arr_vert[], flipQuad allFlips[], int *flippableEcount)
 					}
 					if(flippable == 5){
 						//edge i -> k is flippable to k -> l
-						addTuple(atoi(arr_vert[i]->name),atoi(arr_vert[k]->name), atoi(arr_vert[j]->name),atoi(arr_vert[l]->name), arr_vert, allFlips, flippableEcount);
+						addTuple(atoi(arr_vert[i]->name),atoi(arr_vert[k]->name), atoi(arr_vert[j]->name),atoi(arr_vert[l]->name), arr_vert, size , allFlips, flippableEcount);
 						//remove edge i -> from the grahp
 						//add edge k -> l to the graph
 
@@ -440,7 +440,7 @@ Graph* flipOneEdge(Graph *old, flipQuad edgeToFlip, flipQuad allFlips[]){
 	//printf("to edge: (%d, %d)\n", edgeToFlip.edge2.ver1, edgeToFlip.edge2.ver2);
 	gb_new_edge(new_vert_arr[edgeToFlip.edge2.ver1], new_vert_arr[edgeToFlip.edge2.ver2], 1L);
 	//printf("new edge added: %d, %d\n", newEdge.ver1,newEdge.ver2);
-	removeEdgge(edgeToFlip.edge1.ver1, edgeToFlip.edge1.ver2, new_vert_arr);
+	removeEdgge(edgeToFlip.edge1.ver1, edgeToFlip.edge1.ver2, new_vert_arr, n);
 
 	//return new graph with flipped edge
 	return new;
@@ -470,7 +470,7 @@ Graph* Adj(Graph *g, int i) /* adjacency oracle */{
 		allPossibleFlips[j].edge2.ver2 = 0;
 	}
 
-	makeFlipList(&array_of_vertices, allPossibleFlips, &flippableEcount);
+	makeFlipList(&array_of_vertices, g->n,allPossibleFlips, &flippableEcount);
 	lexicographicOrder(allPossibleFlips, flippableEcount);
 
 	Graph *adjRetrunGraph = flipOneEdge(g, allPossibleFlips[i], allPossibleFlips);
@@ -555,7 +555,7 @@ Graph* localSearch(Graph *g){
 		allFlips[i].edge2.ver2 = 0;
 	}
 
-	makeFlipList(&arr_vert, allFlips, &flippableEcount);
+	makeFlipList(&arr_vert, g->n,allFlips, &flippableEcount);
 	lexicographicOrder(allFlips, flippableEcount);
 	Graph *adjRetrunGraph = flipOneEdge(g, allFlips[firstSmallestToBiggest(allFlips,flippableEcount)], allFlips);
 	return adjRetrunGraph;
@@ -666,10 +666,10 @@ int reversesearch(Graph *g, int maxdeg){
 
 int main(){
 	Area s;
-	Vertex *arr_vert[NUMOFVERTICES];
 
 	//Constructing triangulated graph, 9-critical, reference 12.57.1 from Boutin paper
 	Graph *triang = restore_graph("triangLayer2.gb");
+	Vertex *arr_vert[triang->n];
 
 	//set ID od the loaded graph for root() function
 	
@@ -677,7 +677,7 @@ int main(){
 
 	arr_vert[0] = triang->vertices;
 
-	for (int i=1; i<NUMOFVERTICES;i++){
+	for (int i=1; i<triang->n;i++){
 		arr_vert[i] = arr_vert[0] + i;
 	}
 
@@ -693,67 +693,9 @@ int main(){
 
 	int flippableEcount = 0;
 
-	//printf(triang->id);
-
-	/*ADJ METRIX STUGG
-
-	//adjecancy matrix for the graph
-	int adjecancyMatrix[NUMOFVERTICES][NUMOFVERTICES];
-
-	//populating adjecancy matrix
-
-	//populating with dummy 0s
-	initiateMatrix(adjecancyMatrix);
-
-	//print the matrix for tdebugging
-	printMatrix(adjecancyMatrix);
-
-	//pupulating matrix with 1s where there is an edge
-	updateArcsInMatrix(adjecancyMatrix, &arr_vert);
-	
-	//print the matrix for tdebugging
-	printMatrix(adjecancyMatrix);	
-
-	//raising the matrix to the n power
-	int result[NUMOFVERTICES][NUMOFVERTICES];
-	initiateMatrix(result);
-
-	//square the matrix to the power of n and save it to result
-	squareMatrix(adjecancyMatrix,result, 1);
-
-	//print result of the operation to the nth power
-	printMatrix(result);
-
-	*/
-
-	//TESTING LEXICOGRAPHICALL ORDER SORTING
-	makeFlipList(&arr_vert, allFlips, &flippableEcount);
-	//listTuples(allFlips, &flippableEcount);
-	lexicographicOrder(allFlips, flippableEcount);
-	listTuples(allFlips, &flippableEcount);
-	printf("%d\n", flippableEcount);
-
-	/*
-	Graph *w = Adj(triang, 10);
-	Graph *target = localSearch(w);
-
-	flippableListOfGraph(w);
-	*/
 	
 	printf("reverse ==========================================\n");
 
-	//Graph *kundicka = Adj(triang, 2);
-	//Graph *test = localSearch(triang);
-
-	//int mrdka = backtrack(triang);
-	//printf("%d\n", mrdka);
-
-	/*
-	flippableListOfGraph(triang);
-	//Graph *debilina = Adj(triang, 10);
-	Graph *debilina = localSearch(triang)
-;	flippableListOfGraph(debilina);
-	*/
 
 	Graph *w = localSearch(triang);
 	for(int i = 0; i < 9; i++){
@@ -765,152 +707,6 @@ int main(){
 	char rootID[] =  "root";
 	strcpy(w->id, rootID);
 
-	/*
-	for(int i = 0; i < 35;i++){
-		int testReverse = reverse(w, i);
-		printf("%d\n", testReverse);
-		
-	}
-	*/
-	
-	
-
-	//int idk = reversesearch(w, 50);
-
-	printf("test ==========================================\n");
-
-	//TEST SECTON SKIP
-
-
-	//12 UPPER LAYER
-
-	//Graph *v = restore_graph("v.gb");
-
-	//strcpy(v->id, rootID);
-
-	//flippableListOfGraph(v);
-
-	// neighbours 0, 1 and 4 are in reverse search tree
-
-	//Graph *first = Adj(v, 0);
-	// no neighbours in RS tree
-
-
-	//Graph *first = Adj(v, 1);
-	// neighbours 0, 1 and 4 are in reverse search tree
-
-	//Graph *second = Adj(Adj(v, 1), 0);
-	// neighbours 1, 5, 12 and 16 are in reverse search tree
-	//Graph *third = Adj(Adj(Adj(v, 1), 0), 1);
-	//6,10
-	//Graph *third = Adj(Adj(Adj(v, 1), 0), 5);
-	//7
-	//Graph *third = Adj(Adj(Adj(v, 1), 0), 12);
-	//11
-	//Graph *third = Adj(Adj(Adj(v, 1), 0), 16);
-	//15,16
-
-
-	//Graph *second = Adj(Adj(v, 1), 1);
-	//neighbours 3, 4, 9 and 13 are in reverse search tree
-	//Graph *third = Adj(Adj(Adj(v, 1), 1), 3);
-	//7
-	//Graph *third = Adj(Adj(Adj(v, 1), 1), 4);
-	//-
-	//Graph *third = Adj(Adj(Adj(v, 1), 1), 9);
-	//1
-	//Graph *third = Adj(Adj(Adj(v, 1), 1), 13);
-	//11,12
-
-
-	//Graph *second = Adj(Adj(v, 1), 4);
-	//neighbour 8 is in reverse search tree
-	//Graph *third = Adj(Adj(Adj(v, 1), 4), 8);
-	//-
-
-
-	//Graph *first = Adj(v, 4);
-	//neighbours 0, 1 and 5 are in reverse search tree
-
-	//Graph *second = Adj(Adj(v, 4), 0);
-	// neighbour 7 is in reverse search tree
-	//Graph *third = Adj(Adj(Adj(v, 4), 0), 7);
-	//3,4
-
-
-	//Graph *second = Adj(Adj(v, 4), 1);
-	// neighbours 2 and 13 are in reverse search tree
-	//Graph *third = Adj(Adj(Adj(v, 4), 1), 2);
-	//11
-	//Graph *third = Adj(Adj(Adj(v, 4), 1), 13);
-	//7,8
-
-
-	//Graph *second = Adj(Adj(v, 4), 5);
-	// neighbours 0 and 1 are in reverse search tree
-	//Graph *third = Adj(Adj(Adj(v, 4), 5), 0);
-	//-
-	//Graph *third = Adj(Adj(Adj(v, 4), 5), 1);
-	//5
-
-	//12 UPPER LAYER END
-
-
-	//12 LOWER LAYER
-
-	//Graph *v2 = restore_graph("v2.gb");
-	//strcpy(v2->id, rootID);
-
-	//flippableListOfGraph(v2);
-
-	// neighbours 3, 4 and 19 are in reverse search tree
-
-	
-
-	//Graph *first = Adj(v2, 3);
-	// neighbour 5 is in the reverse search tree
-
-	//Graph *second = Adj(Adj(v2, 3),5);
-	//-
-
-
-	//Graph *first = Adj(v2, 4);
-	// - 
-
-
-	//Graph *first = Adj(v2, 19);
-	//neighbouts 3 and 4 are in the reverse search tree
-
-	//Graph *second = Adj(Adj(v2, 19), 3);
-	//-
-	//Graph *second = Adj(Adj(v2, 19), 4);
-	//-
-
-
-	//12 LOWER LAYER END
-
-	//13 UPPER LAYER
-
-	Graph *v16 = restore_graph("v_16.gb");
-	strcpy(v16->id, rootID);
-
-	flippableListOfGraph(v16);
-	//13 UPPER LAYER END
-
-
-	/*
-	for(int i = 0; i < 26;i++){
-		int testReverse = reverse(v16, i);
-		if(testReverse){
-			printf("%d\n", i);
-		}
-		
-	}
-	*/
-
-	//int idk = reversesearch(v2, 34);
-
-	//25
-	//34
+	int reverse = reversesearch(w, 34);
 
 }

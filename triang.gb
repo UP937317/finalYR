@@ -1,5 +1,5 @@
-* GraphBase graph (util_types ZZZZZZZZZZZZZZ,16V,102A)
-"gb_new_graph(12)",12,56
+* GraphBase graph (util_types ZZZZZZZZZZZZZZ,28V,102A)
+"gb_new_graph(24)",24,56
 * Vertices
 "0",A4
 "1",A30
@@ -13,6 +13,18 @@
 "9",A49
 "10",A35
 "11",A43
+"",0
+"",0
+"",0
+"",0
+"",0
+"",0
+"",0
+"",0
+"",0
+"",0
+"",0
+"",0
 "",0
 "",0
 "",0
@@ -120,4 +132,4 @@ V2,A32,1
 0,0,0
 0,0,0
 0,0,0
-* Checksum 839059256
+* Checksum 940606243
