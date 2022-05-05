@@ -28,28 +28,8 @@ typedef struct {
 	struct flippableTree *neighbourGraphs[];
 }flippableTree;
 
-/* //MATRICES WITH POINTERS TEST FUNCTIONS - ADD LATER
 
-// int** testAdjMatrix = createMatrix(NUMOFVERTICES,NUMOFVERTICES);
-
-int** createMatrix(int m, int n){
-	int* values = calloc(m*n, sizeof(int));
-    int** rows = malloc(m*sizeof(int*));
-    for (int i=0; i<m; ++i){
-        rows[i] = values + i*n;
-    }
-    return rows;
-}
-
-void printTESTmatrix(const int** mat[NUMOFVERTICES][NUMOFVERTICES]){
-	for(int i = 0; i< NUMOFVERTICES; i++){
-		for(int j = 0; j< NUMOFVERTICES ; j++){
-			printf("%d ", mat[i][j]);
-		}
-		printf("\n");
-	}
-}*/
-
+//prints all edges in a graph, for debugging 
 void listEdgesOfGraph(Graph *g){
 	Vertex *v;
 	Arc *a;
@@ -61,6 +41,7 @@ void listEdgesOfGraph(Graph *g){
 	}
 }
 
+//prints the flippable list of graph, for debugging
 void flippableListOfGraph(Graph *g){
 
 	Vertex *testVertice[g->n];
@@ -141,7 +122,7 @@ void squareMatrix(int mat1[NUMOFVERTICES][NUMOFVERTICES], int result[NUMOFVERTIC
 	}
 }
 
-//prints contents of matrix
+//prints contents of adjecancy matrix
 void printMatrix(int mat[NUMOFVERTICES][NUMOFVERTICES]){
 	for(int i = 0; i< NUMOFVERTICES; i++){
 		for(int j = 0; j< NUMOFVERTICES ; j++){
@@ -151,9 +132,9 @@ void printMatrix(int mat[NUMOFVERTICES][NUMOFVERTICES]){
 	}
 }
 
-
 //helper functions to manipulate tuples of flippable edges
 
+//if an edge and an edge it can be flipped into is in the array of flippable edges, return true
 int valueInArray(int vertex1, int vertex2, int vertex3, int vertex4, flipQuad allFlips[]){
     int i;
     for(i = 0; i < 101; i++){
@@ -173,9 +154,9 @@ int valueInArray(int vertex1, int vertex2, int vertex3, int vertex4, flipQuad al
     return 0;
 }
 
+// returns true if and edge is in the graph referenced by array of vertices
 int edgeInGraph(Vertex *arr_vert[], int size ,int vertex3, int vertex4){
 	Arc *a;
-	//printf("[%d,%d]\n", vertex3, vertex4	);
 	for(int i = 0; i < size; i++){
 		for(a = arr_vert[i]->arcs; a; a = a->next){
 			if((atoi(arr_vert[i]->name) == vertex3) && (atoi(a->tip->name) == vertex4)){
@@ -193,19 +174,13 @@ int edgeInGraph(Vertex *arr_vert[], int size ,int vertex3, int vertex4){
 	return 0;
 }
 
-
 //add flippable edge to the array of flippable edges
 void addTuple(int vertex1, int vertex2, int vertex3, int vertex4, Vertex *arr_vert[], int size, flipQuad allFlips[], int *flippableEcount) {
 	
 	if(valueInArray(vertex1, vertex2, vertex3, vertex4, allFlips) || edgeInGraph(arr_vert, size ,vertex3, vertex4)){
 		return;
 	}
-	//printf("%d\n", edgeInGraph(arr_vert, vertex3, vertex4));
-	
 
-	//printf("%d\n", allFlips[*flippableEcount].ver2);
-	
-	//printf("%d, %d\n", vertex1, vertex2);
     allFlips[*flippableEcount].edge1.ver1 = vertex1;
     allFlips[*flippableEcount].edge1.ver2 = vertex2;
     allFlips[*flippableEcount].edge2.ver1 = vertex3;
@@ -218,7 +193,7 @@ void addTuple(int vertex1, int vertex2, int vertex3, int vertex4, Vertex *arr_ve
     
 }
 
-//list all flippable edges
+//list all flippable edges in a graph referenced by array of flipable edges
 void listTuples(flipQuad allFlips[], int *flippableEcount) {
     for (int i = 0; i < *flippableEcount; ++i)
         printf("%d ,flippable edge: (%d,%d) to (%d,%d)\n", i,allFlips[i].edge1.ver1, allFlips[i].edge1.ver2,allFlips[i].edge2.ver1, allFlips[i].edge2.ver2);
@@ -266,6 +241,7 @@ void removeEdgge(int vertex1, int vertex2, Vertex *arr_vert[], int size){
 	}
 }
 
+//returns true if two vertices share an edge
 int neighbours(Vertex *v1, Vertex *v2){
 	Arc *a;
 	int count = 0;
@@ -280,48 +256,6 @@ int neighbours(Vertex *v1, Vertex *v2){
 		}
 	}
 	
-}
-
-void flipPossible(Vertex *v1, Vertex *v2,Vertex *v3, Vertex *v4, flipQuad allFlips[])/*not working*/{
-
-	/*
-	i -> j 
-	i -> k done
-	i -> l
-	k -> l
-	
-
-	Arc *temp1;
-	Arc *temp2;
-	int mrdka = 0;
-	
-	if(neighbours(v1, v2)){
-		for(temp1 = v1->arcs;temp1;temp1=temp1->next){
-			//printf("%s to %s\n",v1->name ,temp1->tip->name);
-			for(temp2 = temp1->tip->arcs;temp2;temp2=temp2->next){
-				//printf("%s to %s\n",temp1->tip->name ,temp2->tip->name);
-				if(!strcmp(temp2->tip->name,v2->name)){
-					mrdka++;
-				}
-			}
-			//printf("\n");
-		}
-		if(mrdka >= 2){
-			printf("flippable\n");
-		}
-		else{
-			printf("not flippable, mrdka: %d\n", mrdka);
-		}
-	}
-	*/
-	if(valueInArray(atoi(v1->name), atoi(v2->name),atoi(v3->name), atoi(v4->name),  allFlips)){
-		printf("edge (%s, %s) is flippable\n", v1->name, v2->name);
-		return 1;
-	}
-	else{
-		printf("edge (%s, %s) is not flippable\n", v1->name, v2->name);
-		return 0;
-	}
 }
 
 void makeFlipList(Vertex *arr_vert[], int size, flipQuad allFlips[], int *flippableEcount){
@@ -394,7 +328,6 @@ flippableEdge getOtherPair(int vertex1, int vertex2, flipQuad allFlips[]){
     flippableEdge empty;
     return empty;
 }
-
 
 // getsgraph as input and returns another graph with flipped edge
 Graph* flipOneEdge(Graph *old, flipQuad edgeToFlip, flipQuad allFlips[]){
@@ -668,7 +601,7 @@ int main(){
 	Area s;
 
 	//Constructing triangulated graph, 9-critical, reference 12.57.1 from Boutin paper
-	Graph *triang = restore_graph("triangLayer2.gb");
+	Graph *triang = restore_graph("v_13_l2.gb");
 	Vertex *arr_vert[triang->n];
 
 	//set ID od the loaded graph for root() function
@@ -693,20 +626,13 @@ int main(){
 
 	int flippableEcount = 0;
 
-	
 	printf("reverse ==========================================\n");
 
-
-	Graph *w = localSearch(triang);
-	for(int i = 0; i < 9; i++){
-		w = localSearch(w);
-		//flippableListOfGraph(w);
-	}
-	//flippableListOfGraph(w);
+	flippableListOfGraph(triang);
 	
 	char rootID[] =  "root";
-	strcpy(w->id, rootID);
+	strcpy(triang->id, rootID);
 
-	int reverse = reversesearch(w, 34);
+	int reverse = reversesearch(triang, 37);
 
 }

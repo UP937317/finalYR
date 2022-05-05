@@ -68,6 +68,6 @@ int main(){
 	gb_new_edge(arr_vert[3],arr_vert[10],1L);
 	gb_new_edge(arr_vert[9],arr_vert[3],1L);
 
-	save_graph(triang, "triangLayer2.gb");
+	save_graph(triang, "v_12_l2.gb");
 
 }

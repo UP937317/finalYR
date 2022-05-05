@@ -231,3 +231,112 @@ bottom layer
 	//Graph *tt = Adj(twelve, );
 	//Graph *ft = Adj(tt, );
 	//Graph *fft = Adj(ft, );
+
+
+
+
+
+
+		printf("test ==========================================\n");
+
+	//TEST SECTON SKIP
+
+
+	//12 UPPER LAYER
+
+	//Graph *v = restore_graph("root12.gb");
+
+	//strcpy(v->id, rootID);
+
+	//flippableListOfGraph(v);
+
+	//12 UPPER LAYER END
+
+
+	//12 LOWER LAYER
+
+	//Graph *v2 = restore_graph("root12_l2.gb");
+	//strcpy(v2->id, rootID);
+
+	//flippableListOfGraph(v2);
+
+
+	//12 LOWER LAYER END
+
+	//13 UPER LAYER
+
+	//Graph *v13 = restore_graph("root13.gb");
+	//strcpy(v13->id, rootID);
+
+	//flippableListOfGraph(v13);
+	//13 UPPER LAYER END
+
+	//13 LOWER LAYER
+
+	//Graph *v13 = restore_graph("root13_l2.gb");
+	//strcpy(v13->id, rootID);
+
+	//flippableListOfGraph(v13);
+	//13 LOWER LAYER END
+
+
+	//14 UPER LAYER
+
+	//Graph *v14 = restore_graph("root14.gb");
+	//strcpy(v14->id, rootID);
+
+	//flippableListOfGraph(v14);
+	//14 UPPER LAYER END
+
+	//14 LOWER LAYER
+
+	//Graph *v14 = restore_graph("root14_l2.gb");
+	//strcpy(v14->id, rootID);
+
+	//flippableListOfGraph(v14);
+	//14 LOWER LAYER END
+
+	//15 UPPER LAYER
+
+	//Graph *v15 = restore_graph("root15.gb");
+	//strcpy(v15->id, rootID);
+
+	//flippableListOfGraph(v15);
+	//15 UPPER LAYER END
+
+	//15 LOWER LAYER
+
+	//Graph *v15 = restore_graph("root15_l2.gb");
+	//strcpy(v15->id, rootID);
+
+	//flippableListOfGraph(v15);
+	//15 LOWER LAYER END
+
+	//16 UPPER LAYER
+
+	//Graph *v16 = restore_graph("root16.gb");
+	//strcpy(v16->id, rootID);
+
+	//flippableListOfGraph(v16);
+	//16 UPPER LAYER END
+
+	//16 LOWER LAYER
+
+
+	//Graph *v16 = restore_graph("v_16_l2.gb");
+	//strcpy(v16->id, rootID);
+
+	//flippableListOfGraph(v16);
+
+	//16 LOWER LAYER END
+
+
+	/*
+	for(int i = 0; i < 26;i++){
+		int testReverse = reverse(v15, i);
+		if(testReverse){
+			printf("%d\n", i);
+		}
+		
+	}
+	*/

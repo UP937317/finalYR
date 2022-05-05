@@ -4,6 +4,8 @@
 #include "gb_graph.h"
 #include "gb_save.h"
 
+
+//saves a inputted graph to a file that can be inputted to pythons networkx library for drawing
 int main(){
 	Area s;
 	FILE *fptr;
