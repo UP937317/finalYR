@@ -20,15 +20,6 @@ typedef struct {
 	flippableEdge edge2;
 } flipQuad;
 
-//defining structure of graph + array of graphs it can be flipped into (graphs of flip distance 1)
-//used for adjecancy oracle
-
-typedef struct {
-	Graph *graph;
-	struct flippableTree *neighbourGraphs[];
-}flippableTree;
-
-
 //prints all edges in a graph, for debugging 
 void listEdgesOfGraph(Graph *g){
 	Vertex *v;
